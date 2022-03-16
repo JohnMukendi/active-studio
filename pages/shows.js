@@ -1,5 +1,9 @@
 import { Box } from "@mui/material";
 import withAdminNav from "./hoc/withAdminNav";
+import TransitionsModal from '../component/Modal'
+
+
+
 
 const Shows = () => {
     return (
@@ -10,6 +14,7 @@ const Shows = () => {
             }}
         >
             <h1>SHOWS</h1>
+            <TransitionsModal/>
         </Box>
     );
 }
