@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import withAdminNav from "./hoc/withAdminNav";
-import TransitionsModal from '../component/Modal'
+import TransitionsModal from '../component/Popup/Modal'
 
 
 
