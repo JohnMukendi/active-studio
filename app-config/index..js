@@ -1,0 +1,1 @@
+export const API_INSTANCE = "https://nahgp463k7.execute-api.us-east-2.amazonaws.com/dev"

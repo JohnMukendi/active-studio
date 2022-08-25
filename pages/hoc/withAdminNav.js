@@ -57,10 +57,12 @@ const tabs = [
     route: "/greenlight",
     icon: <LocalMoviesIcon />,
   },
+
 ];
 
 const withAdminNav = (Component) => {
   return function ComponentWidthAdminNavBar() {
+
     return (
       <Box sx={{ display: "flex", pl: 0 }}>
         <CssBaseline />
@@ -98,8 +100,8 @@ const withAdminNav = (Component) => {
                 </Box>
                 ACTIVE STUDIO{" "}
               </Box>{" "}
-            </Typography>{" "}
-          </Toolbar>{" "}
+            </Typography>
+          </Toolbar>
         </AppBar>
         <Drawer
           variant="permanent"
@@ -130,11 +132,11 @@ const withAdminNav = (Component) => {
             <Divider />
           </Box>{" "}
         </Drawer>{" "}
-        <Box component="main" sx={{ flexGrow: 1, p: 2 }}>
+        <Box component="main" sx={{ flexGrow: 1,}}>
           <Toolbar />
 
           <Component />
-        </Box>{" "}
+        </Box>
       </Box>
     );
   };

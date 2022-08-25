@@ -10,7 +10,7 @@ body {
 
 body {
   height: 100vh;
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 
 a {
@@ -36,4 +36,8 @@ a {
 
 *::-webkit-scrollbar-thumb:hover {
   background: #353535;
+}
+
+input{
+  outline: none;
 }
