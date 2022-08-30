@@ -68,7 +68,7 @@ const Shows = () => {
                 const episodes = item.episodes ? item.episodes : [];
 
                 return (
-                    <ShowContainer show={item} likes={item.likes} title={item.Title} count={episodes.length} link={item.id} img={item.CoverArtLarge} lastUpdated={item.timestamp} description={item.description} />
+                    <ShowContainer show={item} likes={item.likes} title={item.Title} count={episodes.length} link={item.Title} img={item.CoverArtLarge} lastUpdated={item.timestamp} description={item.description} />
                 )
             })
         }

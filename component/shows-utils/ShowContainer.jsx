@@ -51,7 +51,7 @@ const ShowContainer = ({
   return (
     <Grid container sx={styles.container}>
       <Grid sx={{ ...styles.items, justifyContent: "flex-start" }} item md={6}>
-        <Link href={"/shows-episode/" + link}>
+        <Link href={"/shows-episode/ " + link}>
           <a style={{ height: "100%" }}>
             <Box
               onClick={() => {
