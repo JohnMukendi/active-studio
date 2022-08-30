@@ -9,6 +9,8 @@ import { useContext } from "react";
 import { AppContext } from "../../component/context/AppContext";
 import ListIcon from "@mui/icons-material/List";
 import Link from "next/link";
+import axios from "axios";
+import { API_INSTANCE } from "../../app-config/index.";
 
 const ShowContainer = ({
   show,
@@ -27,13 +29,18 @@ const ShowContainer = ({
     useContext(AppContext);
 
 
-  const toggleVisibility = () => {
-
-    console.log(visibility ? true : false)
+  const toggleVisibility = async () => {
     setVisibility(visibility ? false : true)
-    console.log(visibility)
-    const data = {...show , visible : visibility};
-    console.log(data)
+    const data = { ...show, visible: visibility , timestamp: new Date().toLocaleString() };
+
+    var config = {
+      method: 'POST',
+      // url: `${API_INSTANCE}/create-shows`,
+      url: 'https://nahgp463k7.execute-api.us-east-2.amazonaws.com/Stage/create-shows' ,
+      data: JSON.stringify(data)
+    };
+    const res = await axios(config)
+    console.log(res)
     if (visibility) {
       setbuttonType("success");
     } else {

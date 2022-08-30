@@ -6,7 +6,7 @@ import Fade from "@mui/material/Fade";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
-// import CreateShow from "./create-show";
+import CreateShow from "../create-show/create-show";
 import SpeedDial from "@mui/material/SpeedDial";
 import SpeedDialIcon from "@mui/material/SpeedDialIcon";
 import SpeedDialAction from "@mui/material/SpeedDialAction";
@@ -18,7 +18,8 @@ import ShareIcon from "@mui/icons-material/Share";
 import { useState,useEffect,useContext } from "react";
 const axios = require('axios')
 import imageCompression from 'browser-image-compression';
-import {AppContext} from '../../pages/_app';
+import { AppContext } from "../context/AppContext";
+
 
 const actions = [
   { icon: <FileCopyIcon />, name: "Copy" },
@@ -50,7 +51,9 @@ const style = {
 
 export default function CreateShowModal() {
 
-  const {setAddedNew,open,setOpen} = useContext(AppContext);
+  const {setAddedNew} = useContext(AppContext);
+
+  const [open, setOpen] = React.useState(false);
 
   const [files, setFiles] = React.useState([]);
   const [bool, setBool] = React.useState(false);
@@ -235,11 +238,11 @@ export default function CreateShowModal() {
             </Typography>
             <Box sx={{ height: "250px", display: "flex" }}>
               <Box style={{ height: "100%", width: "50%", padding: "10px" }}>
-                {/* <CreateShow
+                <CreateShow
                   files={files}
                   handleSetFiles={handleSetFiles}
                   img={"logo.svg"}
-                /> */}
+                />
               </Box>
               <Box style={{ height: "100%", width: "50%", padding: "10px" }}>
                 <form onSubmit={handleSubmit}>

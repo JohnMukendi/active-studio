@@ -13,6 +13,7 @@ import SortIcon from '@mui/icons-material/Sort';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { API_INSTANCE } from '../app-config/index.';
 import axios from 'axios';
+import CreateShowModal from '../component/Popup/Modal';
 
 
 const Shows = () => {
@@ -104,6 +105,7 @@ return (
             />
 
         </Box>
+        <CreateShowModal />
 
         <GuideBar />
         {
