@@ -5,10 +5,11 @@ import ShowContainer from '../component/shows-utils/ShowContainer';
 import { useEffect, useState } from 'react';
 import GuideBar from '../component/shows-utils/GuideBar';
 import data from '../component/shows-utils/shows.json'
-import { Typography } from '@mui/material';
+import { IconButton, Typography } from '@mui/material';
 import PlaylistPlayIcon from '@mui/icons-material/PlaylistPlay';
 
 // icons
+import SortIcon from '@mui/icons-material/Sort';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { API_INSTANCE } from '../app-config/index.';
 import axios from 'axios';
@@ -18,58 +19,106 @@ const Shows = () => {
 
     const [filterTerm, setFilterTerm] = useState("")
     const [shows, setShows] = useState([])
+    const [filterTime, setFilterTime] = useState(false)
 
-    const getData = async ()=>{
-        const res = await axios.get(`${API_INSTANCE}/get-shows`)
-        // const result = await res.json()
+    const getData = async () => {
+        const res = await axios.get(`${API_INSTANCE}/latest-shows`)
         setShows(res.data)
-       console.log(res)
+        console.log(res)
     }
 
-    useEffect(()=>{
-        // const getData = axios.get(`${API_INSTANCE}/get-shows`)
+    const handleTimeFilterClick = () => {
+        setFilterTime(true)
+    }
+
+    useEffect(() => {
         getData()
-    },[])
+    }, [])
 
-    return (
-        <Box
-            sx={{
-                minHeight: "100vh",
-                width: "100%",
-                background: '#111',
-                // padding: '20px',
 
-            }}
-        >
+    const FilterByTime = ({ shows }) => {
+        let localShows = shows.sort((a, b) => {
+            let A = a.timestamp
+            let B = b.timestamp
+            return A - B
+        })
 
-            <Typography color="#222" variant='h1' sx={{ margin: "" }}>
-                Watch shows
-            </Typography>
-            <Box sx={styles.inputContainer}>
-                <FilterListIcon sx={{ color: '#999' }} />
-                <input
-                    placeholder='filter...'
-                    style={{ color: "#fff", padding: '10px', margin: '10px 0', width: '90%', background: 'transparent' }}
-                    onChange={(e) => setFilterTerm(e.target.value)}
-                />
+        console.log(localShows);
+        return localShows.map((item) => {
+            const episodes = item.episodes ? item.episodes : [];
 
-            </Box>
+            return (
+                <ShowContainer likes={item.likes} title={item.Title} count={episodes.length} link={item.id} img={item.CoverArtLarge} lastUpdated={item.timestamp} description={item.description} />
+            )
+        })
+    }
 
-            <GuideBar />
-
-            {shows.filter((filterVal) => {
+    const RenderShowsBySelectedOptions = () => {
+        if (filterTime) {
+            return <FilterByTime shows={shows} />
+        } else {
+            return shows.filter((filterVal) => {
                 if (filterTerm == "") {
                     return filterVal
                 } else if (filterVal.Title.toLocaleLowerCase().toLocaleUpperCase().includes(filterTerm.toLocaleLowerCase().toLocaleUpperCase())) {
                     return filterVal
                 }
-            }).map((item) => (
-                <ShowContainer likes={item.likes} title={item.Title} count={item.episodes.length} link={item.id} img={item.CoverArtLarge} lastUpdated={item.timestamp} description={item.description} />
-            ))}
+            }).map((item) => {
+                const episodes = item.episodes ? item.episodes : [];
 
+                return (
+                    <ShowContainer show={item} likes={item.likes} title={item.Title} count={episodes.length} link={item.id} img={item.CoverArtLarge} lastUpdated={item.timestamp} description={item.description} />
+                )
+            })
+        }
+    }
+
+
+return (
+    <Box
+        sx={{
+            minHeight: "100vh",
+            width: "100%",
+            background: '#111',
+        }}
+    >
+
+        <Typography color="#222" variant='h1' sx={{ padding: "8px" }}>
+            Watch shows
+        </Typography>
+        <Box sx={styles.inputContainer}>
+            <Box sx={{ width: '150px', display: 'flex', justifyContent: 'space-evenly', alignItems: 'center' }}>
+                <IconButton onClick={handleTimeFilterClick}>
+                    <FilterListIcon sx={{ color: '#999', transformBox: 'rotateY(360deg)' }} />
+                </IconButton>
+                <IconButton onClick={handleTimeFilterClick} sx={{ padding: '12px 12px' }}>
+                    <Typography color="#999" variant='h6' sx={{ fontSize: "12px", fontWeight: 600 }}>
+                        A - Z
+                    </Typography>
+                </IconButton>
+            </Box>
+            <input
+                placeholder='filter...'
+                style={{ color: "#fff", padding: '16px', margin: '10px ', width: '70%', background: 'transparent' }}
+                onChange={(e) => setFilterTerm(e.target.value)}
+            />
 
         </Box>
-    );
+
+        <GuideBar />
+        {
+            shows.map((item) => {
+                const episodes = item.episodes ? item.episodes : [];
+                if (item.Title.toLocaleLowerCase().toLocaleUpperCase().includes(filterTerm.toLocaleLowerCase().toLocaleUpperCase())) {
+                    return (
+                        <ShowContainer show={item} likes={item.likes} title={item.Title} count={episodes.length} link={item.id} img={item.CoverArtLarge} lastUpdated={item.timestamp} description={item.description} />
+                    )
+                }
+            })
+        }
+
+    </Box>
+);
 }
 
 
@@ -81,6 +130,7 @@ const styles = {
     inputContainer: {
         width: '100%',
         height: 'auto',
+        display: 'flex',
         borderTop: '1px solid #222',
         padding: '0 15px'
     }

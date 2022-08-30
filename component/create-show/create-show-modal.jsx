@@ -6,7 +6,7 @@ import Fade from "@mui/material/Fade";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
-// import CreateShow from "./create-show";
+import CreateShow from "./create-show";
 import SpeedDial from "@mui/material/SpeedDial";
 import SpeedDialIcon from "@mui/material/SpeedDialIcon";
 import SpeedDialAction from "@mui/material/SpeedDialAction";
@@ -14,7 +14,7 @@ import FileCopyIcon from "@mui/icons-material/FileCopyOutlined";
 import SaveIcon from "@mui/icons-material/Save";
 import PrintIcon from "@mui/icons-material/Print";
 import ShareIcon from "@mui/icons-material/Share";
-// import {CreateShowHandler} from "../../pages/api/create-show"
+import {CreateShowHandler} from "../../pages/api/create-show"
 import { useState,useEffect,useContext } from "react";
 const axios = require('axios')
 import imageCompression from 'browser-image-compression';
@@ -235,11 +235,11 @@ export default function CreateShowModal() {
             </Typography>
             <Box sx={{ height: "250px", display: "flex" }}>
               <Box style={{ height: "100%", width: "50%", padding: "10px" }}>
-                {/* <CreateShow
+                <CreateShow
                   files={files}
                   handleSetFiles={handleSetFiles}
                   img={"logo.svg"}
-                /> */}
+                />
               </Box>
               <Box style={{ height: "100%", width: "50%", padding: "10px" }}>
                 <form onSubmit={handleSubmit}>

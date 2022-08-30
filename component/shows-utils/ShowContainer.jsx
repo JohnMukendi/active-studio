@@ -11,6 +11,7 @@ import ListIcon from "@mui/icons-material/List";
 import Link from "next/link";
 
 const ShowContainer = ({
+  show,
   title,
   img,
   description,
@@ -20,13 +21,19 @@ const ShowContainer = ({
   count,
   lastUpdated,
 }) => {
-  const [visibility, setVisibility] = useState(true); //boolean type to toggle through public and private
+  const [visibility, setVisibility] = useState(show.visible); //boolean type to toggle through public and private
   const [buttonType, setbuttonType] = useState("success"); //boolean type to toggle through public and private
   const { showsDetails, setShowDetails, DisplayShowDetails } =
     useContext(AppContext);
 
+
   const toggleVisibility = () => {
-    setVisibility(!visibility);
+
+    console.log(visibility ? true : false)
+    setVisibility(visibility ? false : true)
+    console.log(visibility)
+    const data = {...show , visible : visibility};
+    console.log(data)
     if (visibility) {
       setbuttonType("success");
     } else {
@@ -143,35 +150,26 @@ const styles = {
     objectFit: "cover",
   },
   showsContent: {
-    // border:'1px solid yellow',
     height: "100%",
     width: "300px",
     display: "flex",
     flexDirection: "column",
     padding: "20px",
-
-    // height: "18px",
-    // width: "140px",
-    // padding: "0",
     overflow: "hidden",
     position: "relative",
     display: "inline-block",
     margin: "0 5px 0 5px",
-    // textAlign: "center",
     textDecoration: "none",
     textOverflow: "ellipsis",
     whiteSpace: "nowrap",
     color: " #000",
   },
   descriptionBox: {
-    // height: "18px",
     width: "140px",
     padding: "0",
     overflow: "hidden",
     position: "relative",
     display: "inline-block",
-    // margin: "0 5px 0 5px",
-    // textAlign: "center",
     textDecoration: "none",
     textOverflow: "ellipsis",
     whiteSpace: "nowrap",
