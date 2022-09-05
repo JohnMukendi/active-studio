@@ -7,6 +7,7 @@ import axios from 'axios'
 import DeleteIcon from '@mui/icons-material/Delete';
 import Modal from '@mui/material/Modal'
 import { Backdrop, Box, Typography,Button,Fade } from '@mui/material';
+import { ModalLoader } from '../loader';
 
 
 const modalStyle = {
@@ -26,14 +27,16 @@ const modalStyle = {
   p: 2,
 };
 
-export default function ShowOptions({title,fetchAgain,setFetchAgain}) {
+export default function ShowOptions({title,fetchAgain,setFetchAgain,loadingOnModal,setLoadingOnModal}) {
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const [openModal,setOpenModal] = React.useState(false)
 
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
+    
   };
   const handleClose = () => {
     
@@ -41,6 +44,7 @@ export default function ShowOptions({title,fetchAgain,setFetchAgain}) {
   };
 
   const handleModalOpen = ()=>{
+    
     setAnchorEl(null);
     setOpenModal(true)
   }
@@ -51,7 +55,7 @@ export default function ShowOptions({title,fetchAgain,setFetchAgain}) {
   //DELETE FUNCTION 
   const handleDeleteClick = async ()=>{
 
-    
+    setLoadingOnModal(true)
     const showTitle = title.replace(/ /g,'-')
     //const deleteEndpoint = `http://127.0.0.1:3000/delete-show/${showTitle}`
   
@@ -70,14 +74,16 @@ export default function ShowOptions({title,fetchAgain,setFetchAgain}) {
       console.log('RESPONSE:',response)
       setAnchorEl(null);
       setFetchAgain(!fetchAgain)
-      setOpenModal(false)
+      setOpenModal(false);
+
     }catch(error){
       
       console.log('endpoint :',deleteEndpoint)
       
       console.log('DELETE ERROR:',error)
-      
+      throw new error
     }
+    setLoadingOnModal(false)
 
   };
 
@@ -128,7 +134,9 @@ export default function ShowOptions({title,fetchAgain,setFetchAgain}) {
 
         
         <Box style={modalStyle}>
-            <Box sx={{ margin: "0 10px" }}>
+            <Box sx={{ margin: "0 10px" ,position:'relative'}}>
+
+              <ModalLoader action = 'deleting' loadingOnModal={loadingOnModal} />
               <Typography
                 id="transition-modal-title"
                 variant="h6"

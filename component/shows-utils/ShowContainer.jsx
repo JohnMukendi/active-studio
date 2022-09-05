@@ -26,7 +26,9 @@ const ShowContainer = ({
   count,
   lastUpdated,
   fetchAgain,
-  setFetchAgain
+  setFetchAgain,
+  loading,setLoading,
+  loadingOnModal,setLoadingOnModal
 }) => {
   const [visibility, setVisibility] = useState(show.visible); //boolean type to toggle through public and private
   const [buttonType, setbuttonType] = useState("success"); //boolean type to toggle through public and private
@@ -137,6 +139,10 @@ const ShowContainer = ({
             title={title}
             fetchAgain = {fetchAgain}
             setFetchAgain = {setFetchAgain}
+            loading = {loading}
+            setLoading = {setLoading}
+            loadingOnModal = {loadingOnModal}
+            setLoadingOnModal = {setLoadingOnModal}
            />
           {/* <MoreHorizIcon 
             //onClick={()=>handleDeleteClick(title)} cursor='pointer' sx={{fontSize:'28px'}}

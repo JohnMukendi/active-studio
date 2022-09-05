@@ -19,7 +19,7 @@ import { useState,useEffect,useContext } from "react";
 const axios = require('axios')
 import imageCompression from 'browser-image-compression';
 import { AppContext } from "../context/AppContext";
-
+import {ModalLoader} from "../loader/";
 
 const actions = [
   { icon: <FileCopyIcon />, name: "Copy" },
@@ -35,6 +35,7 @@ const input = {
 
 const style = {
   position: "absolute",
+
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
@@ -49,7 +50,11 @@ const style = {
   p: 2,
 };
 
-export default function CreateShowModal({modalOpen,setModalOpen,fetchAgain,setFetchAgain}) {
+export default function CreateShowModal(
+  {modalOpen,setModalOpen,fetchAgain,setFetchAgain,
+  loading,loadingOnModal,setLoadingOnModal
+}
+  ) {
 
   const {setAddedNew} = useContext(AppContext);
 
@@ -70,6 +75,8 @@ export default function CreateShowModal({modalOpen,setModalOpen,fetchAgain,setFe
   const [name, SetName] = React.useState("");
   const [description, SetDescription] = React.useState("");
   const [imagecover, SetImageCover] = React.useState("");
+
+  
 
   //the compressed image and response will be reassigned with these
   //variables
@@ -113,13 +120,17 @@ export default function CreateShowModal({modalOpen,setModalOpen,fetchAgain,setFe
     e.preventDefault()
 
       console.log('click')
+      
     // awesome code
-    if(name,description){
+    if(name,description && files.length !==0){
       const showDetails = { name , description, file:files[0]}
-
+    
+      //show the laoder
+      setLoadingOnModal(true);
+      console.log('loading:',loading)
       ////file compression algorithm
 
-    
+      
       //posting shows object to lambda endpoint,inserting all user data in data object
       const data = JSON.stringify({
           Title: name.replace(/ /g,'-'),
@@ -171,8 +182,10 @@ export default function CreateShowModal({modalOpen,setModalOpen,fetchAgain,setFe
           console.log('POSTED FILES :',files[0],compressedImage);
 
           //setAddedNew(true)
+          setLoadingOnModal(false)
           setFetchAgain(!fetchAgain)
           setModalOpen(false)
+          
         }
 
       } catch (error){
@@ -209,6 +222,7 @@ export default function CreateShowModal({modalOpen,setModalOpen,fetchAgain,setFe
                 onClick={handleCloseSpeedDail}
               />
             ))} */}
+      
       </SpeedDial>
       {/* </Box> */}
       <Modal
@@ -222,9 +236,18 @@ export default function CreateShowModal({modalOpen,setModalOpen,fetchAgain,setFe
           timeout: 500,
         }}
       >
+        
         <Fade in={modalOpen}>
           <Box sx={style}>
-            <Box sx={{ margin: "0 10px" }}>
+            <Box sx={{ margin: "0 10px",position:'relative' }}>
+
+              {/* LOADER COMPONENT */}
+
+              <ModalLoader
+               loadingOnModal = {loadingOnModal} 
+               action = 'uploading'
+               />
+
               <Typography
                 id="transition-modal-title"
                 variant="h6"
