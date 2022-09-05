@@ -21,7 +21,7 @@ const GuideBar = () => {
       </Grid>
       <Grid sx={styles.items} item md={2}>
         <Typography variant="h3" fontSize={16} color="#888">
-          Video count
+          Options
         </Typography>
       </Grid>
     </Grid>

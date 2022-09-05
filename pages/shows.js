@@ -21,9 +21,14 @@ const Shows = () => {
     const [filterTerm, setFilterTerm] = useState("")
     const [shows, setShows] = useState([])
     const [filterTime, setFilterTime] = useState(false)
+    
+    const [fetchAgain,setFetchAgain] = useState(false)
+    const [modalOpen,setModalOpen] = useState(false);
 
     const getData = async () => {
-        const res = await axios.get(`${API_INSTANCE}/latest-shows`)
+        console.log('fetching data....')
+        const res = await axios.get(`${API_INSTANCE}/latest-shows`);
+        console.log('Fetched sucessfully fetched!!!!!')
         setShows(res.data)
         console.log(res)
     }
@@ -33,8 +38,9 @@ const Shows = () => {
     }
 
     useEffect(() => {
+        
         getData()
-    }, [])
+    }, [fetchAgain]);
 
 
     const FilterByTime = ({ shows }) => {
@@ -68,7 +74,14 @@ const Shows = () => {
                 const episodes = item.episodes ? item.episodes : [];
 
                 return (
-                    <ShowContainer show={item} likes={item.likes} title={item.Title} count={episodes.length} link={item.id} img={item.CoverArtLarge} lastUpdated={item.timestamp} description={item.description} />
+                    <ShowContainer
+                        show={item} likes={item.likes}
+                        title={item.Title} count={episodes.length}
+                        link={item.id} img={item.CoverArtLarge}
+                        lastUpdated={item.timestamp} description={item.description}
+                        fetchAgain={fetchAgain}
+                        setFetchAgain = {setFetchAgain} 
+                    />
                 )
             })
         }
@@ -105,7 +118,13 @@ return (
             />
 
         </Box>
-        <CreateShowModal />
+
+        <CreateShowModal 
+            modalOpen = {modalOpen}
+            setModalOpen={setModalOpen}
+            fetchAgain = {fetchAgain}
+            setFetchAgain = {setFetchAgain}
+        />
 
         <GuideBar />
         {
@@ -113,7 +132,12 @@ return (
                 const episodes = item.episodes ? item.episodes : [];
                 if (item.Title.toLocaleLowerCase().toLocaleUpperCase().includes(filterTerm.toLocaleLowerCase().toLocaleUpperCase())) {
                     return (
-                        <ShowContainer show={item} likes={item.likes} title={item.Title} count={episodes.length} link={item.id} img={item.CoverArtLarge} lastUpdated={item.timestamp} description={item.description} />
+                        <ShowContainer
+                            show={item} likes={item.likes} title={item.Title.replace(/-/g,' ')}
+                            count={episodes.length} link={item.id} img={item.CoverArtLarge}
+                            lastUpdated={item.timestamp} description={item.description}
+                            fetchAgain = {fetchAgain} setFetchAgain = {setFetchAgain} 
+                        />
                     )
                 }
             })

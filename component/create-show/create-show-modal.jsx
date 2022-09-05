@@ -189,7 +189,7 @@ export default function CreateShowModal() {
       {/* <Box sx={{ height: "80%", transform: "translateZ(0px)", flexGrow: 1 , }}> */}
       <SpeedDial
         ariaLabel="SpeedDial controlled open example"
-        sx={{ position: "absolute", bottom: "32px", right: "32px" }}
+        sx={{ position: "d", bottom: "32px", right: "32px" }}
         icon={<SpeedDialIcon />}
         onClose={handleCloseSpeedDail}
         onOpen={handleOpenSpeedDail}

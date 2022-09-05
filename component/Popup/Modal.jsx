@@ -49,17 +49,17 @@ const style = {
   p: 2,
 };
 
-export default function CreateShowModal() {
+export default function CreateShowModal({modalOpen,setModalOpen,fetchAgain,setFetchAgain}) {
 
   const {setAddedNew} = useContext(AppContext);
 
-  const [open, setOpen] = React.useState(false);
+  
 
   const [files, setFiles] = React.useState([]);
   const [bool, setBool] = React.useState(false);
   
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleOpen = () => setModalOpen(true);
+  const handleClose = () => setModalOpen(false);
   const handleCreate = () => setBool(true);
 
   const [openSpeedDail, setOpenSpeedDail] = React.useState(false);
@@ -122,7 +122,7 @@ export default function CreateShowModal() {
     
       //posting shows object to lambda endpoint,inserting all user data in data object
       const data = JSON.stringify({
-          Title: name,
+          Title: name.replace(/ /g,'-'),
           filename : showDetails.file.name,
           //this should be pulled from context
           episodes : [],
@@ -170,7 +170,9 @@ export default function CreateShowModal() {
           console.log(`successfully posted to images to s3!!`)
           console.log('POSTED FILES :',files[0],compressedImage);
 
-          setAddedNew(true)
+          //setAddedNew(true)
+          setFetchAgain(!fetchAgain)
+          setModalOpen(false)
         }
 
       } catch (error){
@@ -192,7 +194,7 @@ export default function CreateShowModal() {
       {/* <Box sx={{ height: "80%", transform: "translateZ(0px)", flexGrow: 1 , }}> */}
       <SpeedDial
         ariaLabel="SpeedDial controlled open example"
-        sx={{ position: "absolute", bottom: "32px", right: "32px" }}
+        sx={{ position: "fixed", bottom: "32px", right: "32px" }}
         icon={<SpeedDialIcon />}
         onClose={handleCloseSpeedDail}
         onOpen={handleOpenSpeedDail}
@@ -212,7 +214,7 @@ export default function CreateShowModal() {
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
-        open={open}
+        open={modalOpen}
         onClose={handleClose}
         closeAfterTransition
         BackdropComponent={Backdrop}
@@ -220,7 +222,7 @@ export default function CreateShowModal() {
           timeout: 500,
         }}
       >
-        <Fade in={open}>
+        <Fade in={modalOpen}>
           <Box sx={style}>
             <Box sx={{ margin: "0 10px" }}>
               <Typography
