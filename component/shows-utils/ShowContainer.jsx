@@ -10,7 +10,10 @@ import { AppContext } from "../../component/context/AppContext";
 import ListIcon from "@mui/icons-material/List";
 import Link from "next/link";
 import axios from "axios";
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { API_INSTANCE } from "../../app-config/index.";
+import ShowOptions from "./showOptions";
 
 const ShowContainer = ({
   show,
@@ -22,14 +25,21 @@ const ShowContainer = ({
   link,
   count,
   lastUpdated,
+  fetchAgain,
+  setFetchAgain,
+  loading,setLoading,
+  loadingOnModal,setLoadingOnModal
 }) => {
   const [visibility, setVisibility] = useState(show.visible); //boolean type to toggle through public and private
   const [buttonType, setbuttonType] = useState("success"); //boolean type to toggle through public and private
   const { showsDetails, setShowDetails, DisplayShowDetails } =
     useContext(AppContext);
 
+  //const [showTitle,setShowTitle] = useState('');
 
+  
   const toggleVisibility = async () => {
+
     setVisibility(visibility ? false : true)
     const data = { ...show, visible: visibility , timestamp: new Date().toLocaleString() };
 
@@ -47,6 +57,8 @@ const ShowContainer = ({
       setbuttonType("error");
     }
   };
+
+  
 
   return (
     <Grid container sx={styles.container}>
@@ -120,10 +132,23 @@ const ShowContainer = ({
         </Typography>
       </Grid>
       <Grid sx={{ ...styles.items }} item md={2}>
-        <Typography variant="h3" fontSize={14} color="#888">
-          {likes}
-        </Typography>
-      </Grid>
+        {/* OPTIONS ICON */
+        }
+        <Box>
+          <ShowOptions 
+            title={title}
+            fetchAgain = {fetchAgain}
+            setFetchAgain = {setFetchAgain}
+            loading = {loading}
+            setLoading = {setLoading}
+            loadingOnModal = {loadingOnModal}
+            setLoadingOnModal = {setLoadingOnModal}
+           />
+          {/* <MoreHorizIcon 
+            //onClick={()=>handleDeleteClick(title)} cursor='pointer' sx={{fontSize:'28px'}}
+          /> */}
+        </Box>
+        </Grid>
     </Grid>
   );
 };

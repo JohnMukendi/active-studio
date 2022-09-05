@@ -19,7 +19,7 @@ import { useState,useEffect,useContext } from "react";
 const axios = require('axios')
 // import imageCompression from 'browser-image-compression';
 import { AppContext } from "../context/AppContext";
-
+import {ModalLoader} from "../loader/";
 
 const actions = [
   { icon: <FileCopyIcon />, name: "Copy" },
@@ -35,6 +35,7 @@ const input = {
 
 const style = {
   position: "absolute",
+
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
@@ -49,17 +50,21 @@ const style = {
   p: 2,
 };
 
-export default function CreateShowModal() {
+export default function CreateShowModal(
+  {modalOpen,setModalOpen,fetchAgain,setFetchAgain,
+  loading,loadingOnModal,setLoadingOnModal
+}
+  ) {
 
   const {setAddedNew} = useContext(AppContext);
 
-  const [open, setOpen] = React.useState(false);
+  
 
   const [files, setFiles] = React.useState([]);
   const [bool, setBool] = React.useState(false);
   
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleOpen = () => setModalOpen(true);
+  const handleClose = () => setModalOpen(false);
   const handleCreate = () => setBool(true);
 
   const [openSpeedDail, setOpenSpeedDail] = React.useState(false);
@@ -70,6 +75,8 @@ export default function CreateShowModal() {
   const [name, SetName] = React.useState("");
   const [description, SetDescription] = React.useState("");
   const [imagecover, SetImageCover] = React.useState("");
+
+  
 
   //the compressed image and response will be reassigned with these
   //variables
@@ -113,16 +120,20 @@ export default function CreateShowModal() {
     e.preventDefault()
 
       console.log('click')
+      
     // awesome code
-    if(name,description){
+    if(name,description && files.length !==0){
       const showDetails = { name , description, file:files[0]}
-
+    
+      //show the laoder
+      setLoadingOnModal(true);
+      console.log('loading:',loading)
       ////file compression algorithm
 
-    
+      
       //posting shows object to lambda endpoint,inserting all user data in data object
       const data = JSON.stringify({
-          Title: name,
+          Title: name.replace(/ /g,'-'),
           filename : showDetails.file.name,
           //this should be pulled from context
           episodes : [],
@@ -170,7 +181,11 @@ export default function CreateShowModal() {
           console.log(`successfully posted to images to s3!!`)
           console.log('POSTED FILES :',files[0],compressedImage);
 
-          setAddedNew(true)
+          //setAddedNew(true)
+          setLoadingOnModal(false)
+          setFetchAgain(!fetchAgain)
+          setModalOpen(false)
+          
         }
 
       } catch (error){
@@ -192,7 +207,7 @@ export default function CreateShowModal() {
       {/* <Box sx={{ height: "80%", transform: "translateZ(0px)", flexGrow: 1 , }}> */}
       <SpeedDial
         ariaLabel="SpeedDial controlled open example"
-        sx={{ position: "absolute", bottom: "32px", right: "32px" }}
+        sx={{ position: "fixed", bottom: "32px", right: "32px" }}
         icon={<SpeedDialIcon />}
         onClose={handleCloseSpeedDail}
         onOpen={handleOpenSpeedDail}
@@ -207,12 +222,13 @@ export default function CreateShowModal() {
                 onClick={handleCloseSpeedDail}
               />
             ))} */}
+      
       </SpeedDial>
       {/* </Box> */}
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
-        open={open}
+        open={modalOpen}
         onClose={handleClose}
         closeAfterTransition
         BackdropComponent={Backdrop}
@@ -220,9 +236,18 @@ export default function CreateShowModal() {
           timeout: 500,
         }}
       >
-        <Fade in={open}>
+        
+        <Fade in={modalOpen}>
           <Box sx={style}>
-            <Box sx={{ margin: "0 10px" }}>
+            <Box sx={{ margin: "0 10px",position:'relative' }}>
+
+              {/* LOADER COMPONENT */}
+
+              <ModalLoader
+               loadingOnModal = {loadingOnModal} 
+               action = 'uploading'
+               />
+
               <Typography
                 id="transition-modal-title"
                 variant="h6"

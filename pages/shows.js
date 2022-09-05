@@ -14,6 +14,7 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import { API_INSTANCE } from '../app-config/index.';
 import axios from 'axios';
 import CreateShowModal from '../component/Popup/Modal';
+import {Loader} from '../component/loader/index';
 
 
 const Shows = () => {
@@ -21,11 +22,22 @@ const Shows = () => {
     const [filterTerm, setFilterTerm] = useState("")
     const [shows, setShows] = useState([])
     const [filterTime, setFilterTime] = useState(false)
+    
+    const [fetchAgain,setFetchAgain] = useState(false)
+    const [modalOpen,setModalOpen] = useState(false);
+
+    const [loading,setLoading] = useState(false);
+    const [loadingOnModal,setLoadingOnModal] = useState(false)
 
     const getData = async () => {
-        const res = await axios.get(`${API_INSTANCE}/latest-shows`)
+        setLoading(true)
+        console.log('fetching data....')
+        const res = await axios.get(`${API_INSTANCE}/latest-shows`);
+        console.log('Fetched sucessfully fetched!!!!!')
+        setLoading(false)
         setShows(res.data)
         console.log(res)
+        
     }
 
     const handleTimeFilterClick = () => {
@@ -33,8 +45,9 @@ const Shows = () => {
     }
 
     useEffect(() => {
+        
         getData()
-    }, [])
+    }, [fetchAgain]);
 
 
     const FilterByTime = ({ shows }) => {
@@ -45,11 +58,12 @@ const Shows = () => {
         })
 
         console.log(localShows);
-        return localShows.map((item) => {
+        return localShows.map((item,index) => {
             const episodes = item.episodes ? item.episodes : [];
 
             return (
-                <ShowContainer likes={item.likes} title={item.Title} count={episodes.length} link={item.id} img={item.CoverArtLarge} lastUpdated={item.timestamp} description={item.description} />
+                <ShowContainer key={index} loadingOnModal = {loadingOnModal}
+                setLoadingOnModal = {setLoadingOnModal}likes={item.likes} title={item.Title} count={episodes.length} link={item.id} img={item.CoverArtLarge} lastUpdated={item.timestamp} description={item.description} />
             )
         })
     }
@@ -64,11 +78,23 @@ const Shows = () => {
                 } else if (filterVal.Title.toLocaleLowerCase().toLocaleUpperCase().includes(filterTerm.toLocaleLowerCase().toLocaleUpperCase())) {
                     return filterVal
                 }
-            }).map((item) => {
+            }).map((item,index) => {
                 const episodes = item.episodes ? item.episodes : [];
 
                 return (
-                    <ShowContainer show={item} likes={item.likes} title={item.Title} count={episodes.length} link={item.Title} img={item.CoverArtLarge} lastUpdated={item.timestamp} description={item.description} />
+                    <ShowContainer
+                        key ={index}
+                        show={item} likes={item.likes}
+                        title={item.Title} count={episodes.length}
+                        link={item.id} img={item.CoverArtLarge}
+                        lastUpdated={item.timestamp} description={item.description}
+                        fetchAgain={fetchAgain}
+                        setFetchAgain = {setFetchAgain}
+                        loading = {loading}
+                        setLoading = {setLoading} 
+                        loadingOnModal = {loadingOnModal}
+                        setLoadingOnModal = {setLoadingOnModal}
+                    />
                 )
             })
         }
@@ -105,20 +131,39 @@ return (
             />
 
         </Box>
-        <CreateShowModal />
+
+        <CreateShowModal 
+            modalOpen = {modalOpen}
+            setModalOpen={setModalOpen}
+            fetchAgain = {fetchAgain}
+            setFetchAgain = {setFetchAgain}
+            loading = {loading}
+            loadingOnModal = {loadingOnModal}
+            setLoadingOnModal = {setLoadingOnModal}
+        />
 
         <GuideBar />
+        <Loader loading={loading}/>
         {
-            shows.map((item) => {
+            shows.map((item,index) => {
                 const episodes = item.episodes ? item.episodes : [];
                 if (item.Title.toLocaleLowerCase().toLocaleUpperCase().includes(filterTerm.toLocaleLowerCase().toLocaleUpperCase())) {
                     return (
-                        <ShowContainer show={item} likes={item.likes} title={item.Title} count={episodes.length} link={item.Title} img={item.CoverArtLarge} lastUpdated={item.timestamp} description={item.description} />
+                        <ShowContainer
+                        key ={index}
+                            show={item} likes={item.likes} title={item.Title.replace(/-/g,' ')}
+                            count={episodes.length} link={item.id} img={item.CoverArtLarge}
+                            lastUpdated={item.timestamp} description={item.description}
+                            fetchAgain = {fetchAgain} setFetchAgain = {setFetchAgain}
+                            loading = {loading} setLoading = {setLoading}
+                            loadingOnModal = {loadingOnModal}
+                            setLoadingOnModal = {setLoadingOnModal}
+                        />
                     )
                 }
             })
         }
-
+    
     </Box>
 );
 }
