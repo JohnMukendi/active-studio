@@ -41,8 +41,15 @@ const EpisodeContainer = ({
           </Grid>
           <Grid item md={8.5} sm={null} xs={null} sx={styles.item}>
             <Box sx={styles.title}>
-              <Typography variant="h1" fontSize={16} color={'#f7f7f7'}>Episode :</Typography>
-              <Typography variant="h1" fontSize={16} marginLeft={1} color={'#666'}>
+              <Typography variant="h1" fontSize={16} color={"#f7f7f7"}>
+                Episode :
+              </Typography>
+              <Typography
+                variant="h1"
+                fontSize={16}
+                marginLeft={1}
+                color={"#666"}
+              >
                 {title}
               </Typography>
             </Box>
@@ -65,15 +72,12 @@ const styles = {
     borderBottom: "1px solid  #272727",
     height: "120px",
     width: "100%",
-    // marginTop: "20px",
   },
   item: {
     height: "100%",
-    // border:'1px solid red',
     padding: "10px",
   },
   cover: {
-    // border:'1px solid  orange',
     width: "100%",
     height: "100%",
     display: "flex",
