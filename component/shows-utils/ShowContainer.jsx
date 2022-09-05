@@ -51,11 +51,11 @@ const ShowContainer = ({
   return (
     <Grid container sx={styles.container}>
       <Grid sx={{ ...styles.items, justifyContent: "flex-start" }} item md={6}>
-        <Link href={"/shows-episode/ " + link}>
+        <Link href={"/shows_episode/ " + link}>
           <a style={{ height: "100%" }}>
             <Box
               onClick={() => {
-                DisplayShowDetails(title, description, img);
+                DisplayShowDetails(title, description, img,likes ,count, lastUpdated );
               }}
               sx={{
                 border: "1px solid #484747",

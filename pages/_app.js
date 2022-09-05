@@ -13,24 +13,30 @@ const darkTheme = createTheme({
 
 function MyApp({ Component, pageProps }) {
 
-const [showsDetails , setShowsDetails] = useState({
-  title:"",
-  description:'',
-  img:''
-})
+  const [showsDetails, setShowsDetails] = useState({
+    title: "",
+    description: '',
+    img: '',
+    likes: '',
+    EpisodeCount: '',
+    lastUpdated: ''
 
-const DisplayShowDetails = (title, description, img) =>{
-  
-    console.log('working with stuff')
+  })
+
+  const DisplayShowDetails = (title, description, img, likes, EpisodeCount, lastUpdated) => {
+
     setShowsDetails({
-       title:title,
-       description:description,
-       img:img
+      title: title,
+      description: description,
+      img: img,
+      likes: likes,
+      EpisodeCount: EpisodeCount,
+      lastUpdated: lastUpdated
     })
-}
+  }
 
   return (
-    <AppContext.Provider value={{showsDetails, setShowsDetails, DisplayShowDetails}}>
+    <AppContext.Provider value={{ showsDetails, setShowsDetails, DisplayShowDetails }}>
       <RouterIdicator />
       <ThemeProvider theme={darkTheme}>
         <Component {...pageProps} />
