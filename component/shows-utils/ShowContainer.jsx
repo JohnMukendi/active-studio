@@ -41,7 +41,7 @@ const ShowContainer = ({
   const toggleVisibility = async () => {
 
     setVisibility(visibility ? false : true)
-    const data = { ...show, visible: visibility , timestamp: new Date().toLocaleString() };
+    const data = { ...show, visible: visibility  };
 
     var config = {
       method: 'POST',
@@ -58,7 +58,17 @@ const ShowContainer = ({
     }
   };
 
-  
+  const handleShowClick = async () => {
+    const showTitle = show.Title
+    
+    const getShowEndpoint = `https://nahgp463k7.execute-api.us-east-2.amazonaws.com/Prod/get-show/${showTitle}`
+
+    const response = await axios.get(getShowEndpoint);
+    const showData = response.data.showItem.Item
+
+    console.log('DATA:',showData)
+    DisplayShowDetails(title, description, img ,showData);
+  }
 
   return (
     <Grid container sx={styles.container}>
@@ -66,9 +76,7 @@ const ShowContainer = ({
         <Link href={"/shows-episode/" + link}>
           <a style={{ height: "100%" }}>
             <Box
-              onClick={() => {
-                DisplayShowDetails(title, description, img);
-              }}
+              onClick={handleShowClick}
               sx={{
                 border: "1px solid #484747",
                 height: "100%",

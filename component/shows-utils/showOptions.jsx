@@ -81,7 +81,7 @@ export default function ShowOptions({title,fetchAgain,setFetchAgain,loadingOnMod
       console.log('endpoint :',deleteEndpoint)
       
       console.log('DELETE ERROR:',error)
-      throw new error
+      setLoadingOnModal(false)  
     }
     setLoadingOnModal(false)
 

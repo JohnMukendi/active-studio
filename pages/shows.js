@@ -32,7 +32,7 @@ const Shows = () => {
     const getData = async () => {
         setLoading(true)
         console.log('fetching data....')
-        const res = await axios.get(`${API_INSTANCE}/latest-shows`);
+        const res = await axios.get(`${API_INSTANCE}/popular-shows`);
         console.log('Fetched sucessfully fetched!!!!!')
         setLoading(false)
         setShows(res.data)

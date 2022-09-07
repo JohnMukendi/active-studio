@@ -19,9 +19,9 @@ const [showsDetails , setShowsDetails] = useState({
   img:''
 })
 
-const DisplayShowDetails = (title, description, img) =>{
+const DisplayShowDetails = (title, description, img, showData) =>{
   
-    console.log('working with stuff')
+    
     setShowsDetails({
        title:title,
        description:description,
