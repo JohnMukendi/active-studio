@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Grid } from "@mui/material";
 import { Box, Button } from "@mui/material";
 import { useState } from "react";
@@ -32,7 +32,9 @@ const ShowContainer = ({
 }) => {
   const [visibility, setVisibility] = useState(show.visible); //boolean type to toggle through public and private
   const [buttonType, setbuttonType] = useState("success"); //boolean type to toggle through public and private
-  const { showsDetails, setShowDetails, DisplayShowDetails } =
+  const { showsDetails,singleShowData, setSingleShowData, DisplayShowDetails,metadata,
+  setShowJsonData,
+  } =
     useContext(AppContext);
 
   //const [showTitle,setShowTitle] = useState('');
@@ -57,23 +59,19 @@ const ShowContainer = ({
       setbuttonType("error");
     }
   };
-
+  
+  
   const handleShowClick = async () => {
-    const showTitle = show.Title
-    
-    const getShowEndpoint = `https://nahgp463k7.execute-api.us-east-2.amazonaws.com/Prod/get-show/${showTitle}`
-
-    const response = await axios.get(getShowEndpoint);
-    const showData = response.data.showItem.Item
-
-    console.log('DATA:',showData)
-    DisplayShowDetails(title, description, img ,showData);
   }
-
+  
   return (
     <Grid container sx={styles.container}>
       <Grid sx={{ ...styles.items, justifyContent: "flex-start" }} item md={6}>
-        <Link href={"/shows-episode/" + link}>
+        <Link href={{
+          pathname : "/shows_episode/" + show.Title,
+          query : show.Title,
+          
+        }} >
           <a style={{ height: "100%" }}>
             <Box
               onClick={handleShowClick}

@@ -3,7 +3,7 @@ import "tailwindcss/tailwind.css";
 import RouterIdicator from "../state/context/RouterIdicator";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { AppContext } from "../component/context/AppContext";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const darkTheme = createTheme({
   palette: {
@@ -13,24 +13,56 @@ const darkTheme = createTheme({
 
 function MyApp({ Component, pageProps }) {
 
-const [showsDetails , setShowsDetails] = useState({
-  title:"",
-  description:'',
-  img:''
-})
+  const [showsDetails, setShowsDetails] = useState({
+    title: "",
+    description: '',
+    img: '',
+    likes: '',
+    EpisodeCount: '',
+    lastUpdated: ''
 
-const DisplayShowDetails = (title, description, img, showData) =>{
+  })
+
+  //const DisplayShowDetails = (title, description, img, likes, EpisodeCount, lastUpdated) => {
+
+  const [singleShowData,setSingleShowData] = useState(JSON.stringify({}));
+  const [showJsonData,setShowJsonData] = useState({})
+  
+  const showJson = useRef({data:{}});
+
+  // //using use effect and loal storage to persist jsondata state
+  // useEffect(()=>{
+  //   setSingleShowData(
+  //     JSON.parse(window.localStorage.getItem('singleShowData'))
+  //   )
+  //   console.log('BOOOOM:',singleShowData)  
+  // },[]);
+
+  // useEffect(()=>{
+  //   window.localStorage.setItem('singleShowData',JSON.stringify(singleShowData))
+  // },[singleShowData])
+
+
+
+  console.log({singleShowData})
+  const DisplayShowDetails = (title, description, img,likes, EpisodeCount, lastUpdated ,showData) =>{
   
     
     setShowsDetails({
-       title:title,
-       description:description,
-       img:img
+      title: title,
+      description: description,
+      img: img,
+      likes: likes,
+      EpisodeCount: EpisodeCount,
+      lastUpdated: lastUpdated
     })
-}
+  }
 
   return (
-    <AppContext.Provider value={{showsDetails, setShowsDetails, DisplayShowDetails}}>
+    <AppContext.Provider value={{
+       showsDetails, setShowsDetails, DisplayShowDetails,singleShowData,
+       setSingleShowData,showJson,showJsonData,setShowJsonData,
+       }}>
       <RouterIdicator />
       <ThemeProvider theme={darkTheme}>
         <Component {...pageProps} />

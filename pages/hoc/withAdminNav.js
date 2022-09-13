@@ -38,11 +38,6 @@ const tabs = [
     icon: <VideoLibraryIcon />,
   },
   {
-    title: "EPISODES",
-    route: "/episodes",
-    icon: <VideoLibraryIcon />,
-  },
-  {
     title: "ANALYTICS",
     route: "/analytics",
     icon: <BarChartIcon />,

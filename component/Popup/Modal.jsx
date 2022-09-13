@@ -17,7 +17,7 @@ import ShareIcon from "@mui/icons-material/Share";
 // import {CreateShowHandler} from "../../pages/api/create-show"
 import { useState,useEffect,useContext } from "react";
 const axios = require('axios')
-import imageCompression from 'browser-image-compression';
+// import imageCompression from 'browser-image-compression';
 import { AppContext } from "../context/AppContext";
 import {ModalLoader} from "../loader/";
 
@@ -57,7 +57,7 @@ export default function CreateShowModal(
 }
   ) {
 
-  const {setAddedNew} = useContext(AppContext);
+  const {setAddedNew,showEpisodes} = useContext(AppContext);
 
   
 
@@ -86,8 +86,8 @@ export default function CreateShowModal(
 
   //THE CREATE SHOWS ENDPOINT
 
-  //const endpoint = 'https://nahgp463k7.execute-api.us-east-2.amazonaws.com/Stage/create-shows' 
-  const endpoint = 'http://127.0.0.1:3000/create-shows'
+  const endpoint = 'https://nahgp463k7.execute-api.us-east-2.amazonaws.com/Stage/create-shows' 
+  //const endpoint = 'http://127.0.0.1:3000/create-shows'
   
   useEffect(async() =>{
     
@@ -149,8 +149,8 @@ export default function CreateShowModal(
       const showMetaData = {
         ...JSON.parse(data),
         likes : 0,
-        episodes : [],
         tags : [],
+        episodes : []
       };
 
       
