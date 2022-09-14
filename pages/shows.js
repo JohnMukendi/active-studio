@@ -14,7 +14,8 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import { API_INSTANCE } from '../app-config/index.';
 import axios from 'axios';
 import CreateShowModal from '../component/Popup/Modal';
-import {Loader} from '../component/loader/index';
+import { Loader } from '../component/loader/index';
+import { FormatColorResetOutlined, NoLuggageOutlined } from '@mui/icons-material';
 
 
 const Shows = () => {
@@ -24,21 +25,31 @@ const Shows = () => {
     const [sortedByTitleShows, setsortedByTitleShows] = useState(shows.sort((a,b)=> a.Title.localeCompare(a.Title)));
     const [sortedByTime, setsortedByTimeShows] = useState([]);
     const [filterTime, setFilterTime] = useState(false)
-    
-    const [fetchAgain,setFetchAgain] = useState(false)
-    const [modalOpen,setModalOpen] = useState(false);
 
-    const [loading,setLoading] = useState(false);
-    const [loadingOnModal,setLoadingOnModal] = useState(false)
+    const [fetchAgain, setFetchAgain] = useState(false)
+    const [modalOpen, setModalOpen] = useState(false);
+
+    const [loading, setLoading] = useState(true)
+    const [errorLogs, setErrorLogs] = useState(null)
+    const [loadingOnModal, setLoadingOnModal] = useState(false)
 
     const getData = async () => {
-        setLoading(true)
-        console.log('fetching data....')
-        const res = await axios.get(`${API_INSTANCE}/get-greenlight-shows`);
-        console.log('Fetched sucessfully fetched!!!!!')
-        setLoading(false)
-        setShows(res.data)
-        
+        try {
+            setLoading(true)
+            console.log('fetching data....')
+            const res = await axios.get(`${API_INSTANCE}/get-shows`);
+            // const res = await fetch('https://fakestoreapi.com/products')
+            console.log('Fetched sucessfully fetched!!!!!')
+            setLoading(false)
+            setShows(res.data)
+            // console.log(res)
+
+        } catch (err) {
+            console.log(err)
+            setLoading(true)
+            setErrorLogs(err.message)
+        }
+
     }
 
     const handleTimeFilterClick = () => {
@@ -46,41 +57,96 @@ const Shows = () => {
     }
 
     useEffect(() => {
-        
+
         getData()
     }, [fetchAgain]);
 
 
-return (
-    <Box
-        sx={{
-            minHeight: "100vh",
-            width: "100%",
-            background: '#111',
-        }}
-    >
+    return (
+        <Box
+            sx={{
+                minHeight: "calc(100vh - 58px)",
+                width: "100%",
+                background: '#111',
+            }}
+        >
+            <Box sx={styles.inputContainer}>
+                <Box sx={{ width: '150px', display: 'flex', justifyContent: 'space-evenly', alignItems: 'center' }}>
+                    <IconButton onClick={handleTimeFilterClick}>
+                        <FilterListIcon sx={{ color: '#999', transformBox: 'rotateY(360deg)' }} />
+                    </IconButton>
+                    <IconButton onClick={handleTimeFilterClick} sx={{ padding: '12px 12px' }}>
+                        <Typography color="#999" variant='h6' sx={{ fontSize: "12px", fontWeight: 600 }}>
+                            A - Z
+                        </Typography>
+                    </IconButton>
+                </Box>
+                <input
+                    placeholder='filter...'
+                    style={{ color: "#fff", padding: '16px', margin: '10px ', width: '70%', background: 'transparent' }}
+                    onChange={(e) => setFilterTerm(e.target.value)}
+                />
 
-        <Typography color="#222" variant='h1' sx={{ padding: "8px" }}>
-            Watch shows
-        </Typography>
-        <Box sx={styles.inputContainer}>
-            <Box sx={{ width: '150px', display: 'flex', justifyContent: 'space-evenly', alignItems: 'center' }}>
-                <IconButton onClick={handleTimeFilterClick}>
-                    <FilterListIcon sx={{ color: '#999', transformBox: 'rotateY(360deg)' }} />
-                </IconButton>
-                <IconButton onClick={handleTimeFilterClick} sx={{ padding: '12px 12px' }}>
-                    <Typography color="#999" variant='h6' sx={{ fontSize: "12px", fontWeight: 600 }}>
-                        A - Z
-                    </Typography>
-                </IconButton>
             </Box>
-            <input
-                placeholder='filter...'
-                style={{ color: "#fff", padding: '16px', margin: '10px ', width: '70%', background: 'transparent' }}
-                onChange={(e) => setFilterTerm(e.target.value)}
+
+            <CreateShowModal
+                modalOpen={modalOpen}
+                setModalOpen={setModalOpen}
+                fetchAgain={fetchAgain}
+                setFetchAgain={setFetchAgain}
+                loading={loading}
+                loadingOnModal={loadingOnModal}
+                setLoadingOnModal={setLoadingOnModal}
             />
 
-        </Box>
+            <GuideBar />
+            {/* <Loader loading={loading} /> */}
+
+            {
+                loading ?
+
+                    <Box sx={{
+                        minHeight: '500px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                    }}>
+
+                        {
+                            errorLogs ?
+                                <Box>
+                                    <img src={"network-error.png"} style={{ width: 200, height: 200, }} />
+                                    <Typography variant="h3" fontSize={18} color={"red"} align="center">
+                                        {errorLogs}
+                                    </Typography>
+                                </Box>
+                                :
+                                <Loader />
+                        }
+                    </Box>
+
+                    :
+
+                    shows.map((item, index) => {
+                        const episodes = item.episodes ? item.episodes : [];
+                        if (item.Title.toLocaleLowerCase().toLocaleUpperCase().includes(filterTerm.toLocaleLowerCase().toLocaleUpperCase())) {
+                            return (
+                                <ShowContainer
+                                    key={index}
+                                    show={item} likes={item.likes} title={item.Title.replace(/-/g, ' ')}
+                                    count={episodes.length} link={item.id} img={item.CoverArtLarge}
+                                    lastUpdated={item.timestamp} description={item.description}
+                                    fetchAgain={fetchAgain} setFetchAgain={setFetchAgain}
+                                    loading={loading} setLoading={setLoading}
+                                    loadingOnModal={loadingOnModal}
+                                    setLoadingOnModal={setLoadingOnModal}
+                                />
+                            )
+                        }
+                    })
+            }
+
+
 
         <CreateShowModal 
             modalOpen = {modalOpen}
@@ -113,10 +179,9 @@ return (
                 }
             })
         }
-        {/* <RenderShowsByTitle shows={shows} /> */}
     
     </Box>
-);
+)
 }
 
 
