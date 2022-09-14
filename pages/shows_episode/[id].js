@@ -66,7 +66,7 @@ const EpisodesPage = () => {
   console.log({episodes})
 
   useEffect(()=>{
-    alert('use effect ran')
+  
     console.log('fethingEpisodes...')
     
     fetchEpisodes()
