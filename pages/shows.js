@@ -20,7 +20,9 @@ import {Loader} from '../component/loader/index';
 const Shows = () => {
 
     const [filterTerm, setFilterTerm] = useState("")
-    const [shows, setShows] = useState([])
+    const [shows, setShows] = useState([]);
+    const [sortedByTitleShows, setsortedByTitleShows] = useState(shows.sort((a,b)=> a.Title.localeCompare(a.Title)));
+    const [sortedByTime, setsortedByTimeShows] = useState([]);
     const [filterTime, setFilterTime] = useState(false)
     
     const [fetchAgain,setFetchAgain] = useState(false)
@@ -32,11 +34,10 @@ const Shows = () => {
     const getData = async () => {
         setLoading(true)
         console.log('fetching data....')
-        const res = await axios.get(`${API_INSTANCE}/latest-shows`);
+        const res = await axios.get(`${API_INSTANCE}/get-greenlight-shows`);
         console.log('Fetched sucessfully fetched!!!!!')
         setLoading(false)
         setShows(res.data)
-        console.log(res)
         
     }
 
@@ -48,57 +49,6 @@ const Shows = () => {
         
         getData()
     }, [fetchAgain]);
-
-
-    const FilterByTime = ({ shows }) => {
-        let localShows = shows.sort((a, b) => {
-            let A = a.timestamp
-            let B = b.timestamp
-            return A - B
-        })
-
-        console.log(localShows);
-        return localShows.map((item,index) => {
-            const episodes = item.episodes ? item.episodes : [];
-
-            return (
-                <ShowContainer key={index} loadingOnModal = {loadingOnModal}
-                setLoadingOnModal = {setLoadingOnModal}likes={item.likes} title={item.Title} count={episodes.length} link={item.id} img={item.CoverArtLarge} lastUpdated={item.timestamp} description={item.description} />
-            )
-        })
-    }
-
-    const RenderShowsBySelectedOptions = () => {
-        if (filterTime) {
-            return <FilterByTime shows={shows} />
-        } else {
-            return shows.filter((filterVal) => {
-                if (filterTerm == "") {
-                    return filterVal
-                } else if (filterVal.Title.toLocaleLowerCase().toLocaleUpperCase().includes(filterTerm.toLocaleLowerCase().toLocaleUpperCase())) {
-                    return filterVal
-                }
-            }).map((item,index) => {
-                const episodes = item.episodes ? item.episodes : [];
-
-                return (
-                    <ShowContainer
-                        key ={index}
-                        show={item} likes={item.likes}
-                        title={item.Title} count={episodes.length}
-                        link={item.id} img={item.CoverArtLarge}
-                        lastUpdated={item.timestamp} description={item.description}
-                        fetchAgain={fetchAgain}
-                        setFetchAgain = {setFetchAgain}
-                        loading = {loading}
-                        setLoading = {setLoading} 
-                        loadingOnModal = {loadingOnModal}
-                        setLoadingOnModal = {setLoadingOnModal}
-                    />
-                )
-            })
-        }
-    }
 
 
 return (
@@ -163,6 +113,7 @@ return (
                 }
             })
         }
+        {/* <RenderShowsByTitle shows={shows} /> */}
     
     </Box>
 );
