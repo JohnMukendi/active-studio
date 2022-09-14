@@ -32,7 +32,7 @@ export const Loader = ({ loading, loadingOnModal }) => {
   );
 };
 
-export const ModalLoader = ({ loadingOnModal, action }) => {
+export const ModalLoader = ({ loadingOnModal, action,height }) => {
   let [color, setColor] = useState("#ffffff");
 
   const override = {
@@ -48,9 +48,10 @@ export const ModalLoader = ({ loadingOnModal, action }) => {
     zIndex: 100,
     flexDirection: "column",
     width: "100%",
-    height: action === "uploading" ? "330px" : "220px",
+    height: height,
     alignItems: "center",
     justifyContent: "center",
+    
   };
 
   return (

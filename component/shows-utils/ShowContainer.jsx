@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Grid } from "@mui/material";
 import { Box, Button } from "@mui/material";
 import { useState } from "react";
@@ -32,7 +32,9 @@ const ShowContainer = ({
 }) => {
   const [visibility, setVisibility] = useState(show.visible); //boolean type to toggle through public and private
   const [buttonType, setbuttonType] = useState("success"); //boolean type to toggle through public and private
-  const { showsDetails, setShowDetails, DisplayShowDetails } =
+  const { showsDetails,singleShowData, setSingleShowData, DisplayShowDetails,metadata,
+  setShowJsonData,
+  } =
     useContext(AppContext);
 
   //const [showTitle,setShowTitle] = useState('');
@@ -41,7 +43,7 @@ const ShowContainer = ({
   const toggleVisibility = async () => {
 
     setVisibility(visibility ? false : true)
-    const data = { ...show, visible: visibility , timestamp: new Date().toLocaleString() };
+    const data = { ...show, visible: visibility  };
 
     var config = {
       method: 'POST',
@@ -57,18 +59,22 @@ const ShowContainer = ({
       setbuttonType("error");
     }
   };
-
   
-
+  
+  const handleShowClick = async () => {
+  }
+  
   return (
     <Grid container sx={styles.container}>
       <Grid sx={{ ...styles.items, justifyContent: "flex-start" }} item md={6}>
-        <Link href={"/shows_episode/ " + link}>
+        <Link href={{
+          pathname : "/shows_episode/" + show.Title,
+          query : show.Title,
+          
+        }} >
           <a style={{ height: "100%" }}>
             <Box
-              onClick={() => {
-                DisplayShowDetails(title, description, img,likes ,count, lastUpdated );
-              }}
+              onClick={handleShowClick}
               sx={{
                 border: "1px solid #484747",
                 height: "100%",

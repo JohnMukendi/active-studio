@@ -1,9 +1,10 @@
 import React from "react";
 import { Box } from "@mui/system";
 import { Grid } from "@mui/material";
-import { Typography } from "@mui/material";
+import { Typography,Button } from "@mui/material";
 import { Draggable } from "react-beautiful-dnd";
 import ReorderIcon from "@mui/icons-material/Reorder";
+import EpisodeOptions from "../episodes/episodeOptions";
 
 const EpisodeContainer = ({
   title,
@@ -11,6 +12,8 @@ const EpisodeContainer = ({
   description,
   providerPlaceHolder,
   index,
+  showTitle,
+  sync,setSync
 }) => {
   return (
     <Draggable
@@ -32,6 +35,7 @@ const EpisodeContainer = ({
                 backgroundPosition: "center",
               }}
             >
+              {/* <Button>Delete</Button> */}
               <Box sx={styles.videoLength}>
                 <Typography variant="p" fontSize={14}>
                   {"04:45"}
@@ -39,7 +43,7 @@ const EpisodeContainer = ({
               </Box>
             </Box>
           </Grid>
-          <Grid item md={8.5} sm={null} xs={null} sx={styles.item}>
+          <Grid item md={7.5} sm={null} xs={null} sx={styles.item}>
             <Box sx={styles.title}>
               <Typography variant="h1" fontSize={16} color={"#f7f7f7"}>
                 Episode :
@@ -57,7 +61,24 @@ const EpisodeContainer = ({
               <Typography variant="p" color="#555" fontSize={14}>
                 {description}
               </Typography>
+              
             </Box>
+            
+          </Grid>
+          <Grid item xs={1} sx={{
+
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+          }}>
+                <EpisodeOptions 
+                  title = {title}
+                  showTtile = {showTitle}
+                  sync = {sync}
+                  setSync = {setSync}
+                  index = {index}
+                />
+
           </Grid>
         </Grid>
       )}
@@ -83,6 +104,7 @@ const styles = {
     display: "flex",
     alignItems: "flex-end",
     justifyContent: "flex-end",
+    
   },
   title: {
     height: "50%",

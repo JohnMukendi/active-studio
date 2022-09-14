@@ -8,6 +8,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import Modal from '@mui/material/Modal'
 import { Backdrop, Box, Typography,Button,Fade } from '@mui/material';
 import { ModalLoader } from '../loader';
+import { AppContext } from '../context/AppContext';
 
 
 const modalStyle = {
@@ -27,12 +28,13 @@ const modalStyle = {
   p: 2,
 };
 
-export default function ShowOptions({title,fetchAgain,setFetchAgain,loadingOnModal,setLoadingOnModal}) {
+export default function EpisodeOptions({title,setSync,sync,index}) {
 
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
-  const [openModal,setOpenModal] = React.useState(false)
-
+    const {singleShowData} = React.useContext(AppContext) 
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const open = Boolean(anchorEl);
+    const [openModal,setOpenModal] = React.useState(false)
+    const [loading,setLoading] = React.useState(false)
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -54,36 +56,90 @@ export default function ShowOptions({title,fetchAgain,setFetchAgain,loadingOnMod
   }
   //DELETE FUNCTION 
   const handleDeleteClick = async ()=>{
+    
+    
+    const s3Json = await axios.get(singleShowData.showsMetaData)
+    const prevEpisodes = s3Json.data.episodes
 
-    setLoadingOnModal(true)
-    const showTitle = title.replace(/ /g,'-')
+
+    setLoading(true)
+    
+    // const newEpisodes = prevEpisodes
+    // .map((episode) => {
+    //   console.log(episode.Title + ' and ' + title )
+    //   if(episode.Tilte != title){
+    //     alert(true + episode.Title + ' ' +title)
+    //     return episode
+    //   }else{
+    //     alert(false)
+    //   }
+    // })
+    // console.log({newEpisodes})
     //const deleteEndpoint = `http://127.0.0.1:3000/delete-show/${showTitle}`
   
     //const deleteEndpoint = `${API_INSTANCE}/delete-show/${showTitle}`;
-    const deleteEndpoint = `https://nahgp463k7.execute-api.us-east-2.amazonaws.com/Prod/delete-show/${showTitle}`
+    
+    //const deleteEndpoint = `https://nahgp463k7.execute-api.us-east-2.amazonaws.com/Prod/delete-episode`
+    const deleteEndpoint = 'http://127.0.0.1:3000/delete-episode'
     
     console.log('endpoint :',deleteEndpoint)
-  
+    
     try{
+        const deleted = prevEpisodes.splice(index,1)
+        console.log({deleted})
+    
       console.log(title)
       
       console.log('deleting...')
-      const response = await axios.delete(deleteEndpoint)
-      console.log(deleteEndpoint)
+
+      const deleteEpisodeConfig = {
+        method : 'Delete',
+        url : deleteEndpoint,
+        data : JSON.stringify({showTitle:singleShowData.Title,title})
+    }
+      console.log('deleteData:',deleteEpisodeConfig.data)
+
+      const response = await axios(deleteEpisodeConfig);
+        console.log(response)
+      const {deleteSignedUrl} = response.data
+
+      const newJson = {
+        ...s3Json.data,
+        episodes:prevEpisodes
+      }
+      newJson.splice(index,1)
+      const jsonDataConfig = {
+        method : 'put',
+        url : deleteSignedUrl,
+        headers : {
+          'Content-Type': 'application/json',
+        },
+        
+        data : JSON.stringify(newJson,null,2)
+        
+      }
+      prevEpisodes.splice(index,1)
+      console.log('deleteData22:',jsonDataConfig.data)
+      await axios(jsonDataConfig)
+
+     
+        setLoading(false)
+      
         //,{header:{'Content-Type' : 'application/json'}});
       console.log('RESPONSE:',response)
       setAnchorEl(null);
-      setFetchAgain(!fetchAgain)
+      setSync(!sync)
       setOpenModal(false);
+      console.log('DELETED!!!!')
 
     }catch(error){
       
       console.log('endpoint :',deleteEndpoint)
       
       console.log('DELETE ERROR:',error)
-      setLoadingOnModal(false)  
+      setLoading(false)  
     }
-    setLoadingOnModal(false)
+    setLoading(false)
 
   };
 
@@ -136,7 +192,7 @@ export default function ShowOptions({title,fetchAgain,setFetchAgain,loadingOnMod
         <Box style={modalStyle}>
             <Box sx={{ margin: "0 10px" ,position:'relative'}}>
 
-              <ModalLoader action = 'deleting' loadingOnModal={loadingOnModal} />
+              <ModalLoader action = 'deleting' loadingOnModal={loading} />
               <Typography
                 id="transition-modal-title"
                 variant="h6"

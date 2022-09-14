@@ -21,6 +21,7 @@ const axios = require('axios')
 import { AppContext } from "../context/AppContext";
 import {ModalLoader} from "../loader/";
 
+
 const actions = [
   { icon: <FileCopyIcon />, name: "Copy" },
   { icon: <SaveIcon />, name: "Save" },
@@ -56,7 +57,7 @@ export default function CreateShowModal(
 }
   ) {
 
-  const {setAddedNew} = useContext(AppContext);
+  const {setAddedNew,showEpisodes} = useContext(AppContext);
 
   
 
@@ -132,15 +133,28 @@ export default function CreateShowModal(
 
       
       //posting shows object to lambda endpoint,inserting all user data in data object
+      const date = new Date()
+      const timestamp = date.toLocaleString();
+             
       const data = JSON.stringify({
           Title: name.replace(/ /g,'-'),
           filename : showDetails.file.name,
           //this should be pulled from context
-          episodes : [],
-          description : description
+          description : description,
+          timestamp : timestamp
         
       });
-        
+       
+      //shows meta data that will be posted to s3 and retrived on a 'getsingleshow call 
+      const showMetaData = {
+        ...JSON.parse(data),
+        likes : 0,
+        tags : [],
+        episodes : []
+      };
+
+      
+      //configs for axios post
       var config = {
         method: 'POST',
         url: endpoint,
@@ -168,7 +182,8 @@ export default function CreateShowModal(
           //destructuring out presined urls from response
           const {smallCoverArtPresignedUrl} = response
           const {largeCoverArtPreSignedUrl} = response
-          
+          const {showsMetaDataSignedUrl} = response
+
           //Posting image to presigned url
           await axios.put(smallCoverArtPresignedUrl,compressedImage,{
               'Content-Type': 'image/jpeg',
@@ -177,6 +192,21 @@ export default function CreateShowModal(
           await axios.put(largeCoverArtPreSignedUrl,files[0],{
               'Content-Type': 'image/jpeg',
           });
+          
+          //posting json meta data to s3
+          const metaDataConfig = {
+            method : 'put',
+            url : showsMetaDataSignedUrl,
+            headers : {
+              'Content-Type': 'application/json',
+            },
+            
+            data : JSON.stringify(showMetaData,null,2)
+          }
+
+          await axios(metaDataConfig);         
+          
+
           
           console.log(`successfully posted to images to s3!!`)
           console.log('POSTED FILES :',files[0],compressedImage);
@@ -189,6 +219,7 @@ export default function CreateShowModal(
         }
 
       } catch (error){
+        setLoadingOnModal(false)
         console.log('IMAGE POST ERROR',error)
       }
 

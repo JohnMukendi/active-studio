@@ -23,7 +23,7 @@ const Shows = () => {
     const [filterTerm, setFilterTerm] = useState("")
     const [shows, setShows] = useState([])
     const [filterTime, setFilterTime] = useState(false)
-
+    
     const [fetchAgain, setFetchAgain] = useState(false)
     const [modalOpen, setModalOpen] = useState(false);
 
@@ -48,7 +48,7 @@ const Shows = () => {
             setLoading(true)
             setErrorLogs(err.message)
         }
-
+        
     }
 
     const handleTimeFilterClick = () => {
@@ -56,7 +56,7 @@ const Shows = () => {
     }
 
     useEffect(() => {
-
+        
         getData()
     }, [fetchAgain]);
 
@@ -137,6 +137,19 @@ const Shows = () => {
                     onChange={(e) => setFilterTerm(e.target.value)}
                 />
 
+        <Typography color="#222" variant='h1' sx={{ padding: "8px" }}>
+            Watch shows
+        </Typography>
+        <Box sx={styles.inputContainer}>
+            <Box sx={{ width: '150px', display: 'flex', justifyContent: 'space-evenly', alignItems: 'center' }}>
+                <IconButton onClick={handleTimeFilterClick}>
+                    <FilterListIcon sx={{ color: '#999', transformBox: 'rotateY(360deg)' }} />
+                </IconButton>
+                <IconButton onClick={handleTimeFilterClick} sx={{ padding: '12px 12px' }}>
+                    <Typography color="#999" variant='h6' sx={{ fontSize: "12px", fontWeight: 600 }}>
+                        A - Z
+                    </Typography>
+                </IconButton>
             </Box>
 
             <CreateShowModal

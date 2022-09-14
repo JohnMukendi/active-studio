@@ -14,7 +14,8 @@ const thumbsContainer = {
   height:"100%",
   border:"4px dotted green",
   justifyContent:"center",
-  alignItems:"center"
+  alignItems:"center",
+  padding : '25%'
 };
 
 const thumb = {
@@ -65,13 +66,14 @@ const handleCheck = (e)=>{
     
     // my drag and drop functionality
     onDrop: acceptedFiles => {
-      props.handleSetFiles(acceptedFiles.map(file => Object.assign(file, {
+      console.log('dropped video file')
+      props.handleSetVideoFiles(acceptedFiles.map(file => Object.assign(file, {
         preview: URL.createObjectURL(file)
       })));
     }
   });
 
-  const thumbs = props.files.map(file => (
+  const thumbs = props.videoFiles.map(file => (
     <div style={thumb} key={file.name}>
       <div style={thumbInner}>
           { 
@@ -80,7 +82,7 @@ const handleCheck = (e)=>{
         //   style={img}
         //   />
         <ReactPlayer 
-         src={file.preview}
+         src={props.videoFiles[0].preview}
          style={img}
          />
          }
@@ -92,12 +94,14 @@ const handleCheck = (e)=>{
 
   useEffect(() => {
     // Make sure to revoke the data uris to avoid memory leaks
-    props.files.forEach(file => URL.revokeObjectURL(file.preview));
-  }, [props.files]);
+    props.videoFiles.forEach(file => URL.revokeObjectURL(file.preview));
+  }, [props.videoFiles]);
 
   return (
     <section className="container" style={container}>
-      <div {...getRootProps({className: 'dropzone'})}>
+      <div {...getRootProps({className: 'dropzone'})} 
+      style={{display:'flex',flexDirection:'column'}}
+      >
         <input {...getInputProps()} onChange={()=>{handleCheck}}/>
         <p style={{fontSize:"12px",textTransform:"uppercase"}}>Drag 'n' drop the show cover image</p>
         <p style={{fontSize:"10px",textTransform:"uppercase",margin:"10px 0 5px 0"}}>Accepted files TYPES : video/mp4 </p>

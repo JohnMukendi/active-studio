@@ -65,10 +65,13 @@ function Previews(props) {
     
     // my drag and drop functionality
     onDrop: acceptedFiles => {
+      
       props.handleSetFiles(acceptedFiles.map(file => Object.assign(file, {
         preview: URL.createObjectURL(file)
       })));
     }
+
+    
   });
 
   const thumbs = props.files.map(file => (
