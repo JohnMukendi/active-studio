@@ -11,6 +11,7 @@ import { useState } from "react";
 import CreateEpisodeCoverArt from "./create-episode-coverArt";
 import { AppContext } from "../context/AppContext";
 import { ModalLoader } from "../loader";
+import { API_INSTANCE } from "../../app-config/index.";
 const axios = require('axios')
 
 
@@ -103,8 +104,8 @@ const handleSubmit =async (e)=>{
         }
       )
 
-      const episodesEndpoint = 'https://nahgp463k7.execute-api.us-east-2.amazonaws.com/Stage/create-episode'
-      //const episodesEndpoint = 'http://127.0.0.1:3000/create-episode'
+      //const episodesEndpoint = API_INSTANCE + '/create-episode'
+      const episodesEndpoint = 'http://127.0.0.1:3000/create-episode'
 
       const config = {
         method : 'post',
@@ -116,7 +117,7 @@ const handleSubmit =async (e)=>{
       
       console.log({response}); 
       const {showMetaDataSignedUrl} = response.data;
-
+      alert(showMetaDataSignedUrl)
       //posting the json data
       console.log('posting json data...')
       const jsonDataConfig = {

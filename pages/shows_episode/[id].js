@@ -55,7 +55,7 @@ const EpisodesPage = () => {
     showJson.current = episodesResponse.data;
     console.log('results:',episodesResponse.data);
 
-    setEpisodes(showJson.current.episodes)
+    setEpisodes(showJson.episodes)
     console.log({showJson})
     console.log('DATA:',showData)
     
