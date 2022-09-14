@@ -42,7 +42,7 @@ const EpisodesPage = () => {
   const fetchEpisodes = async()=>{
   
     setLoading(true)
-    const getShowEndpoint = `https://nahgp463k7.execute-api.us-east-2.amazonaws.com/Prod/get-show/${showTitleQuery}`
+    const getShowEndpoint = `${API_INSTANCE}/get-show/${showTitleQuery}`
 
     const response = await axios.get(getShowEndpoint);
     const showData = response.data.showItem.Item
