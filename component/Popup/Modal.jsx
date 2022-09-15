@@ -111,7 +111,7 @@ export default function CreateShowModal({
     const request = await axios.post(`${API_INSTANCE}/iframe-uploader`,
       JSON.stringify(iframeUploader)
     );
-    // const request = await axios.post("https://nahgp463k7.execute-api.us-east-2.amazonaws.com/Prod/iframe-uploader", iframeUploader );
+    
     const response = request;
     console.log(response);
     setModalOpen(false);
@@ -170,6 +170,7 @@ export default function CreateShowModal({
         //this should be pulled from context
         episodes: [],
         description: description,
+        timestamp: new Date()
       });
 
       var config = {
@@ -308,7 +309,7 @@ export default function CreateShowModal({
             {showType === "Free Show" ? (
               <Box
                 sx={{
-                  minHeight: "40vh",
+                  minHeight: "35vh",
                   background: "",
                   padding: "21px 8px",
                   display: "flex",
@@ -347,34 +348,29 @@ export default function CreateShowModal({
                 >
                   create
                 </Button>
-
-                {/* <Box  sx={{ height:'250px' ,width:'100%' ,margin:'16px 0' , background:'' }} >
-                  <div dangerouslySetInnerHTML={{__html: <div style={{height:'50px'}}>yoo</div> }}></div>
-                <RenderIframe /> */}
-
-                        {/* <SeamlessIframe
-            sanitizedHtml={sanitize(iframeUploader.EmbedCode)}
-            customStyle={`
-                body {
-                    font-family: sans-serif;
-                }
-            `}
-        /> */}
-
-                {/* </Box> */}
               </Box>
             ) : (
-              <>
+              <Box
+              sx={{
+                minHeight: "35vh",
+                background: "",
+                padding: "8px 0",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                // alignItems: "flex-end",
+              }}>
                 <Typography
                   variant="p"
-                  sx={{ fontSize: "11px", margin: "0 10px" }}
+                  sx={{ fontSize: "11px", margin: "0 10px" , width:'95%' }}
                 >
                   <b>NOTE :</b> ONLY SHOWS WITH VIDEOS UNDERNEATH THEM ARE
                   VISIBLE TO THE PUBLIC
                 </Typography>
-                <Box sx={{ height: "250px", display: "flex" }}>
+                <Box sx={{ height: "300px", display: "flex" }}>
                   <Box
-                    style={{ height: "100%", width: "50%", padding: "10px" }}
+                    style={{ height: "100%", width: "50%", padding: "10px 0" }}
                   >
                     <CreateShow
                       files={files}
@@ -424,7 +420,7 @@ export default function CreateShowModal({
                         sx={{
                           display: "flex",
                           justifyContent: "space-between",
-                          marginTop: "20px",
+                          margin: "20px 0",
                         }}
                       >
                         <Button
@@ -455,7 +451,7 @@ export default function CreateShowModal({
                     </form>
                   </Box>
                 </Box>
-              </>
+              </Box>
             )}
           </Box>
         </Fade>

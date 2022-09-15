@@ -30,27 +30,30 @@ const ShowContainer = ({
   loading,setLoading,
   loadingOnModal,setLoadingOnModal
 }) => {
-  const [visibility, setVisibility] = useState(show.visible); //boolean type to toggle through public and private
+  const [visibility, setVisibility] = useState(show.visible === undefined ? false : show.visible ); //boolean type to toggle through public and private
   const [buttonType, setbuttonType] = useState("success"); //boolean type to toggle through public and private
   const { showsDetails, setShowDetails, DisplayShowDetails } =
     useContext(AppContext);
 
-  //const [showTitle,setShowTitle] = useState('');
+  const timestamp = lastUpdated.replace("T", " ");
+  const updatedTimestamp = timestamp.replace("Z", " ").split(".")[0];
 
   
   const toggleVisibility = async () => {
-
-    setVisibility(visibility ? false : true)
-    const data = { ...show, visible: visibility , timestamp: new Date().toLocaleString() };
+    // setVisibility(visibility ? false : true);
+    setVisibility(!visibility);
+    console.log(show)
+    const showData = { ...show, visible: visibility , timestamp: new Date().toLocaleString() };
+    console.log(showData)
 
     var config = {
       method: 'POST',
       // url: `${API_INSTANCE}/create-shows`,
-      url: 'https://nahgp463k7.execute-api.us-east-2.amazonaws.com/Stage/create-shows' ,
-      data: JSON.stringify(data)
+      url: `${API_INSTANCE}/create-shows` ,
+      data: JSON.stringify(showData)
     };
-    const res = await axios(config)
-    console.log(res)
+    // const res = await axios(config)
+    // console.log(res)
     if (visibility) {
       setbuttonType("success");
     } else {
@@ -128,7 +131,7 @@ const ShowContainer = ({
       </Grid>
       <Grid sx={{ ...styles.items }} item md={2}>
         <Typography variant="h3" fontSize={14} color="#888">
-          {lastUpdated}
+          {updatedTimestamp}
         </Typography>
       </Grid>
       <Grid sx={{ ...styles.items }} item md={2}>
@@ -183,7 +186,7 @@ const styles = {
   },
   showsContent: {
     height: "100%",
-    width: "300px",
+    width: {xs:"300px" , md:'100%'},
     display: "flex",
     flexDirection: "column",
     padding: "20px",
@@ -197,7 +200,7 @@ const styles = {
     color: " #000",
   },
   descriptionBox: {
-    width: "140px",
+    width:{ xs: "140px" , md:'200px'},
     padding: "0",
     overflow: "hidden",
     position: "relative",
