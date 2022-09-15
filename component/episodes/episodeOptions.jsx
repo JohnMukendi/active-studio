@@ -9,7 +9,7 @@ import Modal from '@mui/material/Modal'
 import { Backdrop, Box, Typography,Button,Fade } from '@mui/material';
 import { ModalLoader } from '../loader';
 import { AppContext } from '../context/AppContext';
-
+import { API_INSTANCE } from '../../app-config/index.';
 
 const modalStyle = {
   position: "absolute",
@@ -64,29 +64,16 @@ export default function EpisodeOptions({title,setSync,sync,index}) {
 
     setLoading(true)
     
-    // const newEpisodes = prevEpisodes
-    // .map((episode) => {
-    //   console.log(episode.Title + ' and ' + title )
-    //   if(episode.Tilte != title){
-    //     alert(true + episode.Title + ' ' +title)
-    //     return episode
-    //   }else{
-    //     alert(false)
-    //   }
-    // })
-    // console.log({newEpisodes})
-    //const deleteEndpoint = `http://127.0.0.1:3000/delete-show/${showTitle}`
-  
-    //const deleteEndpoint = `${API_INSTANCE}/delete-show/${showTitle}`;
     
-    //const deleteEndpoint = `https://nahgp463k7.execute-api.us-east-2.amazonaws.com/Prod/delete-episode`
-    const deleteEndpoint = 'http://127.0.0.1:3000/delete-episode'
+    const deleteEndpoint = `${API_INSTANCE}/delete-episode`;
     
-    console.log('endpoint :',deleteEndpoint)
+    //const deleteEndpoint = 'http://127.0.0.1:3000/delete-episode'
+    
+    
     
     try{
-        const deleted = prevEpisodes.splice(index,1)
-        console.log({deleted})
+        //const deleted = prevEpisodes.splice(index,1)
+       // console.log({deleted})
     
       console.log(title)
       
@@ -102,12 +89,12 @@ export default function EpisodeOptions({title,setSync,sync,index}) {
       const response = await axios(deleteEpisodeConfig);
         console.log(response)
       const {deleteSignedUrl} = response.data
-
+      console.log({deleteSignedUrl})
       const newJson = {
         ...s3Json.data,
         episodes:prevEpisodes
       }
-      newJson.splice(index,1)
+      newJson.episodes.splice(index,1)
       const jsonDataConfig = {
         method : 'put',
         url : deleteSignedUrl,
@@ -118,7 +105,7 @@ export default function EpisodeOptions({title,setSync,sync,index}) {
         data : JSON.stringify(newJson,null,2)
         
       }
-      prevEpisodes.splice(index,1)
+      //prevEpisodes.splice(index,1)
       console.log('deleteData22:',jsonDataConfig.data)
       await axios(jsonDataConfig)
 

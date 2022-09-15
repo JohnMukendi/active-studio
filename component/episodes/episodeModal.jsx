@@ -22,10 +22,10 @@ const style = {
   transform: "translate(-50%, -50%)",
   bgcolor: "#111",
   border: "2px solid #fff",
-  height: "100vh",
+  
   overflow : 'scroll',
   padding:"20px 0",
-  width: "100%",
+  
   boxShadow: 24,
   color: "white",
   p: 2,
@@ -44,8 +44,7 @@ export default function EpisodeModal(
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const handleCreate = () => setBool(true);
-  console.log(files)
-  console.log(videoFiles)
+  
   // receive input values from show name and show description
   const [name, SetName] = useState("");
   const [description, SetDescription] = useState("");
@@ -61,7 +60,7 @@ export default function EpisodeModal(
 
   //CREATE EPISODE BUTTON HANDLER
 const handleSubmit =async (e)=>{
-  e.preventDefault();
+  //e.preventDefault();
     console.log(sync)
     
   
@@ -104,8 +103,8 @@ const handleSubmit =async (e)=>{
         }
       )
 
-      //const episodesEndpoint = API_INSTANCE + '/create-episode'
-      const episodesEndpoint = 'http://127.0.0.1:3000/create-episode'
+      const episodesEndpoint = API_INSTANCE + '/create-episode'
+      //const episodesEndpoint = 'http://127.0.0.1:3000/create-episode'
 
       const config = {
         method : 'post',
@@ -115,9 +114,9 @@ const handleSubmit =async (e)=>{
 
       const response = await axios(config);
       
-      console.log({response}); 
+      console.log({createEpisodeResponse:response}); 
       const {showMetaDataSignedUrl} = response.data;
-      alert(showMetaDataSignedUrl)
+      //alert(showMetaDataSignedUrl)
       //posting the json data
       console.log('posting json data...')
       const jsonDataConfig = {
@@ -134,7 +133,7 @@ const handleSubmit =async (e)=>{
         
       }
       await axios(jsonDataConfig)
-      console.log({jDATA:JSON.parse(jsonDataConfig.data)})
+
       //posting the thumbnail
       const {largeCoverArt} = response.data
 
@@ -178,7 +177,7 @@ const handleSetVideoFiles = (file)=>{
 }
 
   return (
-    <div style={{ height: "auto" }}>
+    <form style={{ height: "auto" }}>
       
       <Modal
         aria-labelledby="transition-modal-title"
@@ -270,7 +269,7 @@ const handleSetVideoFiles = (file)=>{
                   style={{
                     border: "none",
                     width: "100%",
-                    height: "24px",
+                    height: "34px",
                     padding: "10px 0",
                     background: "#222",
                     display: "flex",
@@ -314,7 +313,7 @@ const handleSetVideoFiles = (file)=>{
                   <Button
                     variant="outlined"
                     color="error"
-                    sx={{ "&:hover": { background: "red", color: "white" } }}
+                    sx={{ "&:hover": { background: "red", color: "white" },marginTop:'120px' }}
                     onClick={handleClose}
                     
                   >
@@ -324,7 +323,7 @@ const handleSetVideoFiles = (file)=>{
                     type = "submit"
                     color="success"
                     variant="outlined"
-                    sx={{ "&:hover": { backgroundColor: "darkgreen", color: "white" } }}
+                    sx={{ "&:hover": { backgroundColor: "darkgreen", color: "white" },marginTop:'120px' }}
                     onClick={handleSubmit}
                   >
                     create
@@ -335,6 +334,6 @@ const handleSetVideoFiles = (file)=>{
           
         </Fade>
       </Modal>
-    </div>
+    </form>
   );
 }

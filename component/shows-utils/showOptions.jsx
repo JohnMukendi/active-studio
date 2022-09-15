@@ -8,7 +8,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import Modal from '@mui/material/Modal'
 import { Backdrop, Box, Typography,Button,Fade } from '@mui/material';
 import { ModalLoader } from '../loader';
-
+import { API_INSTANCE } from '../../app-config/index.';
 
 const modalStyle = {
   position: "absolute",
@@ -59,8 +59,8 @@ export default function ShowOptions({title,fetchAgain,setFetchAgain,loadingOnMod
     const showTitle = title.replace(/ /g,'-')
     //const deleteEndpoint = `http://127.0.0.1:3000/delete-show/${showTitle}`
   
-    //const deleteEndpoint = `${API_INSTANCE}/delete-show/${showTitle}`;
-    const deleteEndpoint = `https://nahgp463k7.execute-api.us-east-2.amazonaws.com/Prod/delete-show/${showTitle}`
+    const deleteEndpoint = `${API_INSTANCE}/delete-show/${showTitle}`;
+    //const deleteEndpoint = `https://nahgp463k7.execute-api.us-east-2.amazonaws.com/Prod/delete-show/${showTitle}`
     
     console.log('endpoint :',deleteEndpoint)
   

@@ -33,7 +33,7 @@ const Shows = () => {
         setLoading(true)
         console.log('fetching data....')
         const res = await axios.get(`${API_INSTANCE}/get-shows`);
-  
+        
         //const res = await axios.get('http://127.0.0.1:3000/get-shows/');
 
         res.data.map(item => console.log('ITEM:',item))

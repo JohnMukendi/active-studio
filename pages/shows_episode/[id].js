@@ -21,7 +21,32 @@ import { useRouter } from "next/router";
 import { MEDIA_URL_INSTANCE } from "../../app-config/index.";
 import { Loader } from "../../component/loader"; 
 
-const EpisodesPage = () => {
+export async function getStaticPaths() {
+  // Call an external API endpoint to get posts
+  const res = await fetch(API_INSTANCE + '/get-shows')
+  const shows = await res.json()
+
+  // Get the paths we want to pre-render based on posts
+  const paths = shows.map((show) => ({
+    params: { id: show.Title },
+  }))
+
+  // We'll pre-render only these paths at build time.
+  // { fallback: false } means other routes should 404.
+  return { paths, fallback: false }
+}
+
+export async function getStaticProps({ params }) {
+  // params contains the post `id`.
+  // If the route is like /posts/1, then params.id is 1
+  const res = await fetch(`${API_INSTANCE}/get-show/${params.id}`)
+  const show = await res.json()
+
+  // Pass post data to the page via props
+  return { props: { show } }
+}
+
+const EpisodesPage = ({show}) => {
   
   const { DisplayShowsDetails,showsDetails,singleShowData,setSingleShowData,showJson, setShowDetails,showJsonData,setShowJsonData } = useContext(AppContext);
   
@@ -34,45 +59,57 @@ const EpisodesPage = () => {
   const [videoFiles,setVideoFiles] = useState([{name:''}])
 
   const showTitleQuery = router.query.id
-  console.log({showTitleQuery})
+  
 
   //loader state
   const [loading,setLoading] = useState(false);
 
-  const fetchEpisodes = async()=>{
+  const fetchShow = async()=>{
   
     setLoading(true)
-    const getShowEndpoint = `${API_INSTANCE}/get-show/${showTitleQuery}`
+    // const getShowEndpoint = `${API_INSTANCE}/get-show/${showTitleQuery}`
 
-    const response = await axios.get(getShowEndpoint);
-    const showData = response.data.showItem.Item
-    console.log({showData})
-    setSingleShowData(showData)
-
-    console.log('YEAAAAAH:',singleShowData);
-    const episodesResponse = await axios.get(showData.showsMetaData);
+    // const response = await axios.get(getShowEndpoint);
+    // const showData = response.data.showItem.Item
+    // console.log({showData})
+    setSingleShowData(show.showItem.Item)
     
+    const episodesResponse = await axios.get(show.showItem.Item.showsMetaData)
     showJson.current = episodesResponse.data;
     console.log('results:',episodesResponse.data);
+    // //setEpisodes(showJson.current.episodes)
+    setEpisodes(episodesResponse.data.episodes)
 
-    setEpisodes(showJson.episodes)
+    setLoading(false)
+  };
+
+  const fetchEpisodes = async ()=>{
+
+    setLoading(true)
+    const episodesResponse = await axios.get(singleShowData.showsMetaData);
+    
     console.log({showJson})
-    console.log('DATA:',showData)
+    //console.log('DATA:',showData)
     
     setLoading(false)
   }
+  
   const [sync,setSync] = useState(false);
 
   console.log({episodes})
 
   useEffect(()=>{
-  
-    console.log('fethingEpisodes...')
+    console.log('fetching a show')
+    fetchShow()
     
-    fetchEpisodes()
-    
-  },[sync])
+  },[sync]);
 
+  // useEffect(()=>{
+
+  //   console.log('fethingEpisodes...')  
+  //   fetchEpisodes()
+  //   fetchEpisodes()
+  // },[sync])
   
   const [searchTerm, setSearchTerm] = useState("");
   
@@ -86,7 +123,7 @@ const EpisodesPage = () => {
 
   
 
-  console.log('AAAAH:',showJsonData)
+  
   return (
     <Box sx={{ color: "#fff", background: "red" }}>
          <SpeedDial

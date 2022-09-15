@@ -30,7 +30,7 @@ const EpisodeContainer = ({
             <Box
               sx={{
                 ...styles.cover,
-                background: `url(${img})`,
+                background: `url(${img.replace(/ /g,'-')})`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
               }}
