@@ -5,7 +5,7 @@ import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { Select, MenuItem, TextField, Stack } from "@mui/material";
+import { Select, Grid, MenuItem, TextField, Stack } from "@mui/material";
 import CreateShow from "../create-show/create-show";
 import SpeedDial from "@mui/material/SpeedDial";
 import SpeedDialIcon from "@mui/material/SpeedDialIcon";
@@ -35,8 +35,6 @@ const input = {
   background: "#333",
   color: "white",
 };
-
-
 
 export default function CreateShowModal({
   modalOpen,
@@ -70,17 +68,21 @@ export default function CreateShowModal({
     setShowType(item);
   };
 
+  function Iframe(props) {
+    return (<div dangerouslySetInnerHTML={ {__html:  props.iframe ? props.iframe:""}} />);
+  }
   const style = {
     position: "absolute",
-  
+
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    minHeight: showType === "Free Show" ? '350px' : '450px',
+    // minHeight: showType === "Free Show" ? '350px' : '450px',
+    height: "75%",
     bgcolor: "#111",
     border: "2px solid #fff",
     padding: "20px 0",
-    width: "600px",
+    width: "75%",
     boxShadow: 24,
     color: "white",
     p: 2,
@@ -90,7 +92,10 @@ export default function CreateShowModal({
     ID: "",
     Title: "",
     EmbedCode: "",
+    url: "",
   });
+
+  
 
   const handleFieldChange = (e) => {
     setIframeUploader({
@@ -108,10 +113,11 @@ export default function CreateShowModal({
   }, [iframeUploader.Title]);
 
   const handleIframe = async () => {
-    const request = await axios.post(`${API_INSTANCE}/iframe-uploader`,
+    const request = await axios.post(
+      `${API_INSTANCE}/iframe-uploader`,
       JSON.stringify(iframeUploader)
     );
-    
+
     const response = request;
     console.log(response);
     setModalOpen(false);
@@ -170,7 +176,7 @@ export default function CreateShowModal({
         //this should be pulled from context
         episodes: [],
         description: description,
-        timestamp: new Date()
+        timestamp: new Date(),
       });
 
       var config = {
@@ -224,9 +230,9 @@ export default function CreateShowModal({
     }
   };
 
-  const RenderIframe = () =>{
-    return iframeUploader.EmbedCode
-  }
+  const RenderIframe = () => {
+    return iframeUploader.EmbedCode;
+  };
 
   const handleSetFiles = (file) => {
     setFiles(file);
@@ -310,7 +316,7 @@ export default function CreateShowModal({
               <Box
                 sx={{
                   minHeight: "35vh",
-                  background: "",
+                  // background: "red",
                   padding: "21px 8px",
                   display: "flex",
                   flexDirection: "column",
@@ -334,6 +340,15 @@ export default function CreateShowModal({
                   fullWidth
                   label="Embed Link"
                 />
+                {/* <TextField
+                  value={iframeUploader.url}
+                  onChange={handleFieldChange}
+                  name="url"
+                  type="textarea"
+                  sx={{ margin: "12px 0" }}
+                  fullWidth
+                  label="Url"
+                /> */}
                 <Button
                   type="submit"
                   color="success"
@@ -348,109 +363,128 @@ export default function CreateShowModal({
                 >
                   create
                 </Button>
+                <Iframe iframe={iframeUploader.EmbedCode}/>
+                {/* {iframeUploader.EmbedCode} */}
               </Box>
             ) : (
               <Box
-              sx={{
-                minHeight: "35vh",
-                background: "",
-                padding: "8px 0",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-                // alignItems: "flex-end",
-              }}>
-                <Typography
-                  variant="p"
-                  sx={{ fontSize: "11px", margin: "0 10px" , width:'95%' }}
-                >
-                  <b>NOTE :</b> ONLY SHOWS WITH VIDEOS UNDERNEATH THEM ARE
-                  VISIBLE TO THE PUBLIC
-                </Typography>
-                <Box sx={{ height: "300px", display: "flex" }}>
-                  <Box
-                    style={{ height: "100%", width: "50%", padding: "10px 0" }}
-                  >
-                    <CreateShow
-                      files={files}
-                      handleSetFiles={handleSetFiles}
-                      img={"logo.svg"}
-                    />
-                  </Box>
-                  <Box
-                    style={{ height: "100%", width: "50%", padding: "10px" , marginTop:'48px' }}
-                  >
-                    <form onSubmit={handleSubmit}>
-                      <input
-                        style={{
-                          height: "50px",
-                          width: "100%",
-                          background: "#222",
-                          display: "flex",
-                          alignItems: "center",
-                          padding: "10px ",
-                          color: "white",
-                          border: "none",
-                        }}
-                        placeholder="SHOW NAME"
-                        onChange={(e) => SetName(e.target.value)}
-                      />
-                      {/* <p style={{margin:"0px 10px",fontSize:"14px"}}>{'SHOW NAME'}</p>  */}
-
-                      <textarea
-                        placeholder="SHOW DESCRIPTION"
-                        onChange={(e) => SetDescription(e.target.value)}
-                        style={{
-                          border: "none",
-                          width: "100%",
-                          height: "120px",
-                          padding: "10px 0",
-                          background: "#222",
-                          display: "flex",
-                          alignItems: "flex-start",
-                          padding: "10px 0",
-                          marginTop: "20px",
-                          padding: "10px",
-                          color: "white",
-                        }}
-                      ></textarea>
-
+                sx={{
+                  minHeight: "35vh",
+                  background: "",
+                  padding: "8px 0",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  // alignItems: "flex-end",
+                }}
+              >
+                <Grid container>
+                  <Grid item md={6}>
+                    <Typography
+                      variant="p"
+                      sx={{ fontSize: "11px", margin: "0 10px", width: "95%" }}
+                    >
+                      <b>NOTE :</b> ONLY SHOWS WITH VIDEOS UNDERNEATH THEM ARE
+                      VISIBLE TO THE PUBLIC
+                    </Typography>
+                    <Box sx={{ height: "300px", display: "flex" }}>
                       <Box
-                        sx={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          margin: "20px 0",
+                        style={{
+                          height: "100%",
+                          width: "50%",
+                          padding: "10px 0",
                         }}
                       >
-                        <Button
-                          variant="outlined"
-                          color="error"
-                          sx={{
-                            "&:hover": { background: "red", color: "white" },
-                          }}
-                          onClick={handleClose}
-                        >
-                          close
-                        </Button>
-                        <Button
-                          type="submit"
-                          color="success"
-                          variant="outlined"
-                          sx={{
-                            "&:hover": {
-                              backgroundColor: "darkgreen",
-                              color: "white",
-                            },
-                          }}
-                          onClick={handleCreate}
-                        >
-                          Upload
-                        </Button>
+                        <CreateShow
+                          files={files}
+                          handleSetFiles={handleSetFiles}
+                          img={"logo.svg"}
+                        />
                       </Box>
-                    </form>
-                  </Box>
-                </Box>
+                      <Box
+                        style={{
+                          height: "100%",
+                          width: "50%",
+                          padding: "10px",
+                          marginTop: "48px",
+                        }}
+                      >
+                        <form onSubmit={handleSubmit}>
+                          <input
+                            style={{
+                              height: "50px",
+                              width: "100%",
+                              background: "#222",
+                              display: "flex",
+                              alignItems: "center",
+                              padding: "10px ",
+                              color: "white",
+                              border: "none",
+                            }}
+                            placeholder="SHOW NAME"
+                            onChange={(e) => SetName(e.target.value)}
+                          />
+                          {/* <p style={{margin:"0px 10px",fontSize:"14px"}}>{'SHOW NAME'}</p>  */}
+
+                          <textarea
+                            placeholder="SHOW DESCRIPTION"
+                            onChange={(e) => SetDescription(e.target.value)}
+                            style={{
+                              border: "none",
+                              width: "100%",
+                              height: "120px",
+                              padding: "10px 0",
+                              background: "#222",
+                              display: "flex",
+                              alignItems: "flex-start",
+                              padding: "10px 0",
+                              marginTop: "20px",
+                              padding: "10px",
+                              color: "white",
+                            }}
+                          ></textarea>
+
+                          <Box
+                            sx={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              margin: "20px 0",
+                            }}
+                          >
+                            <Button
+                              variant="outlined"
+                              color="error"
+                              sx={{
+                                "&:hover": {
+                                  background: "red",
+                                  color: "white",
+                                },
+                              }}
+                              onClick={handleClose}
+                            >
+                              close
+                            </Button>
+                            <Button
+                              type="submit"
+                              color="success"
+                              variant="outlined"
+                              sx={{
+                                "&:hover": {
+                                  backgroundColor: "darkgreen",
+                                  color: "white",
+                                },
+                              }}
+                              onClick={handleCreate}
+                            >
+                              Upload
+                            </Button>
+                          </Box>
+                        </form>
+                      </Box>
+                    </Box>
+                  </Grid>
+                </Grid>
               </Box>
             )}
           </Box>

@@ -5,9 +5,9 @@ import ShowContainer from "../component/shows-utils/ShowContainer";
 import { useEffect, useState } from "react";
 import GuideBar from "../component/shows-utils/GuideBar";
 import data from "../component/shows-utils/shows.json";
-import { IconButton, Button ,Typography } from "@mui/material";
+import { IconButton, Button, Typography } from "@mui/material";
 import PlaylistPlayIcon from "@mui/icons-material/PlaylistPlay";
-
+import parse from "html-dom-parser";
 // icons
 import SortIcon from "@mui/icons-material/Sort";
 import FilterListIcon from "@mui/icons-material/FilterList";
@@ -20,6 +20,7 @@ import {
   NoLuggageOutlined,
 } from "@mui/icons-material";
 import Link from "next/link";
+import Iframe from "../component/shows-utils/Iframe";
 
 const Shows = () => {
   const [filterTerm, setFilterTerm] = useState("");
@@ -35,19 +36,24 @@ const Shows = () => {
   const [errorLogs, setErrorLogs] = useState(null);
   const [loadingOnModal, setLoadingOnModal] = useState(false);
 
-  const sortedByTitleShows = shows.sort((a, b) => a.Title.localeCompare(b.Title))
-  const sortByTime =  shows.sort((x, y) => {
-    const first = new Date(x.timestamp) ; const second = new Date(y.timestamp);
-    return first - second ;
+  const sortedByTitleShows = shows.sort((a, b) =>
+    a.Title.localeCompare(b.Title)
+  );
+  const sortByTime = shows.sort((x, y) => {
+    const first = new Date(x.timestamp);
+    const second = new Date(y.timestamp);
+    return first - second;
     // return new Date(x.timestamp) < new Date(y.timestamp) ? 1 : -1
-})
+  });
 
   const getData = async () => {
     try {
       setLoading(true);
       console.log("fetching data....");
       const res = await axios.get(`${API_INSTANCE}/get-shows`);
-      const freeShowsResponse = await axios.get(`${API_INSTANCE}/get-free-shows`);
+      const freeShowsResponse = await axios.get(
+        `${API_INSTANCE}/get-free-shows`
+      );
       console.log("Fetched sucessfully fetched!!!!!");
       setLoading(false);
       setShows(res.data);
@@ -130,7 +136,22 @@ const Shows = () => {
 
       <GuideBar />
       {/* <Loader loading={loading} /> */}
-
+      {loading ? (
+        <></>
+      ) : (
+        <div style={{ padding: "16px" }}>
+          <Typography variant="h5" sx={{ margin: "12px 0" }}>
+            Free Shows By Title
+          </Typography>
+          {freeShows.map((item, index) => {
+            const newIframe = item.EmbedCode;
+            console.log(newIframe.replace('width="350"'));
+            return (
+              <Iframe iframe={item.EmbedCode} />
+            );
+          })}
+        </div>
+      )}
       {loading ? (
         <Box
           sx={{
@@ -189,22 +210,6 @@ const Shows = () => {
           }
         })
       )}
-
-        <div style={{ padding:'16px' }}>
-
-      {
-        freeShows.map((item,index)=>{
-          return(
-            <Link href="https://www.youtube.com/watch?v=Cw1mfM8qWkg">
-            <a>
-
-            <Button key={index} > {item.Title} </Button>
-            </a>
-            </Link>
-            )
-          })
-        }
-        </div>
 
       <CreateShowModal
         modalOpen={modalOpen}
