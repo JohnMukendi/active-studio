@@ -12,8 +12,8 @@ import ShareIcon from "@mui/icons-material/Share";
 import { Backdrop, Box, Typography, Fade } from "@mui/material";
 import { ModalLoader } from "../loader";
 import { Edit } from "@mui/icons-material";
-import ShareComponent from "./ShareComponent";
-import EditShowModal from "./EditShow";
+import ShareComponent from "../shows-utils/ShareComponent";
+import EditShowModal from "../shows-utils/EditShow";
 
 const modalStyle = {
   position: "absolute",
@@ -52,7 +52,6 @@ export default function ShowOptions({
     setShareLink(newLink)
     console.log(shareLink)
   }
-  console.log(show)
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -141,18 +140,7 @@ export default function ShowOptions({
             </Button>
           </div>
         </MenuItem>
-        <MenuItem
-          // onClick={handleDelete}
-          sx={{ display: "flex", alignItems: "center" }}
-        >
-          <div style={{ width:'100%' }}>
-            {/* <Button>
-              <Edit sx={{ marginRight: "4px" }} />
-              Edit
-            </Button> */}
-            <EditShowModal show={show}  openModal={openEditModal} setOpenModal={setOpenEditModal}/>
-          </div> 
-        </MenuItem>
+       
       </Menu>
 
       {/* DELETE CONFIRMATION PROMPT */}

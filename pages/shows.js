@@ -4,28 +4,27 @@ import TransitionsModal from "../component/Popup/Modal";
 import ShowContainer from "../component/shows-utils/ShowContainer";
 import { useEffect, useState } from "react";
 import GuideBar from "../component/shows-utils/GuideBar";
-import data from "../component/shows-utils/shows.json";
-import { IconButton, Button, Typography } from "@mui/material";
-import PlaylistPlayIcon from "@mui/icons-material/PlaylistPlay";
-import parse from "html-dom-parser";
-// icons
+import { IconButton, Button, Grid, Typography } from "@mui/material";
+
 import SortIcon from "@mui/icons-material/Sort";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { API_INSTANCE } from "../app-config/index.";
 import axios from "axios";
 import CreateShowModal from "../component/Popup/Modal";
 import { Loader } from "../component/loader/index";
-import {
-  FormatColorResetOutlined,
-  NoLuggageOutlined,
-} from "@mui/icons-material";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import Link from "next/link";
 import Iframe from "../component/shows-utils/Iframe";
+import IframeContainer from "../component/shows-utils/iframeContainer";
 
 const Shows = () => {
   const [filterTerm, setFilterTerm] = useState("");
   const [shows, setShows] = useState([]);
   const [freeShows, setFreeShows] = useState([]);
+  const [selectedShowType, setSelectedShowType] = useState(
+    "Active Tv Originals"
+  );
 
   const [filterTime, setFilterTime] = useState(false);
 
@@ -71,6 +70,7 @@ const Shows = () => {
 
   useEffect(() => {
     getData();
+    console.log("boom")
   }, [fetchAgain]);
 
   console.log(shows.sort((a, b) => a.Title.localeCompare(b.Title)));
@@ -84,6 +84,30 @@ const Shows = () => {
         background: "#111",
       }}
     >
+      <Box sx={{ display:'flex' , justifyContent:'center' }}>
+        <Button
+          onClick={(e) => setSelectedShowType("Active TV Originals")}
+          sx={{
+            margin:'4px 8px',
+            borderBottom:selectedShowType !== "Free Shows" ? "2px solid yellow" : "2px solid transparent", 
+            padding: "16px",
+            color: "#eee",
+          }}
+        >
+          Active Tv Originals
+        </Button>
+        <Button
+          onClick={(e) => setSelectedShowType("Free Shows")}
+          sx={{
+            margin:'4px 8px',
+            borderBottom:selectedShowType === "Free Shows" ? "2px solid yellow" : "2px solid transparent", 
+            padding: "16px",
+            color: "#eee",
+          }}
+        >
+          Free Shows
+        </Button>
+      </Box>
       <Box sx={styles.inputContainer}>
         <Box
           sx={{
@@ -136,22 +160,9 @@ const Shows = () => {
 
       <GuideBar />
       {/* <Loader loading={loading} /> */}
-      {loading ? (
-        <></>
-      ) : (
-        <div style={{ padding: "16px" }}>
-          <Typography variant="h5" sx={{ margin: "12px 0" }}>
-            Free Shows By Title
-          </Typography>
-          {freeShows.map((item, index) => {
-            const newIframe = item.EmbedCode;
-            console.log(newIframe.replace('width="350"'));
-            return (
-              <Iframe iframe={item.EmbedCode} />
-            );
-          })}
-        </div>
-      )}
+      <Typography variant="h5" sx={{ padding: "0 16px ", margin: "12px 0" }}>
+        {selectedShowType}
+      </Typography>
       {loading ? (
         <Box
           sx={{
@@ -180,6 +191,35 @@ const Shows = () => {
             <Loader />
           )}
         </Box>
+      ) : selectedShowType === "Free Shows" ? (
+        <div style={{ padding: "16px" }}>
+          <Grid container>
+            {freeShows.map((item, index) => {
+              const newIframe = item.EmbedCode;
+              const replacedHeight = newIframe.replace("560", "100%");
+              const replacedWidth = replacedHeight.replace("315", "100%");
+              return (
+                
+                <IframeContainer
+                key={index}
+                embedCode={replacedWidth}
+                show={item}
+                likes={100}
+                title={item.Title.replace(/-/g, " ")}
+                lastUpdated={"Yesterday"}
+                description={"THis is an iframe embeded from another platform."}
+                fetchAgain={fetchAgain}
+                setFetchAgain={setFetchAgain}
+                loading={loading}
+                setLoading={setLoading}
+                loadingOnModal={loadingOnModal}
+                setLoadingOnModal={setLoadingOnModal}
+              />
+    
+              );
+            })}
+          </Grid>
+        </div>
       ) : (
         shows.map((item, index) => {
           const episodes = item.episodes ? item.episodes : [];
