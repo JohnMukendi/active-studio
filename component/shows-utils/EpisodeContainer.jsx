@@ -13,7 +13,11 @@ const EpisodeContainer = ({
   providerPlaceHolder,
   index,
   showTitle,
-  sync,setSync
+  sync,setSync,episodes,
+  files, 
+  setFiles,
+  videoFiles, 
+  setVideoFiles
 }) => {
   return (
     <Draggable
@@ -46,7 +50,7 @@ const EpisodeContainer = ({
           <Grid item md={7.5} sm={null} xs={null} sx={styles.item}>
             <Box sx={styles.title}>
               <Typography variant="h1" fontSize={16} color={"#f7f7f7"}>
-                Episode :
+                {title.toUpperCase()}
               </Typography>
               <Typography
                 variant="h1"
@@ -54,7 +58,7 @@ const EpisodeContainer = ({
                 marginLeft={1}
                 color={"#666"}
               >
-                {title}
+                #{index+1}
               </Typography>
             </Box>
             <Box sx={styles.description}>
@@ -77,6 +81,11 @@ const EpisodeContainer = ({
                   sync = {sync}
                   setSync = {setSync}
                   index = {index}
+                  episodes = {episodes}
+                  files = {files}
+                  setFiles = {setFiles}
+                  videoFiles = {videoFiles}
+                  setVideoFiles = {setVideoFiles}
                 />
 
           </Grid>

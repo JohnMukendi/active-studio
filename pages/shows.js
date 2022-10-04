@@ -2,7 +2,7 @@ import Box from '@mui/material/Box';
 import withAdminNav from "./hoc/withAdminNav";
 import TransitionsModal from '../component/Popup/Modal'
 import ShowContainer from '../component/shows-utils/ShowContainer';
-import { useEffect, useState } from 'react';
+import { useEffect, useState,useContext } from 'react';
 import GuideBar from '../component/shows-utils/GuideBar';
 import data from '../component/shows-utils/shows.json'
 import { IconButton, Typography } from '@mui/material';
@@ -16,9 +16,9 @@ import axios from 'axios';
 import CreateShowModal from '../component/Popup/Modal';
 import {Loader} from '../component/loader/index';
 
-
+export let allShows = []
 const Shows = () => {
-
+    
     const [filterTerm, setFilterTerm] = useState("")
     const [shows, setShows] = useState([])
     const [filterTime, setFilterTime] = useState(false)
@@ -41,7 +41,7 @@ const Shows = () => {
         setLoading(false)
         setShows(res.data)
         console.log(res)
-        
+        allShows = res.data
     }
 
     const handleTimeFilterClick = () => {

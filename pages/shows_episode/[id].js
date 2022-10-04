@@ -18,6 +18,8 @@ import SpeedDialIcon from "@mui/material/SpeedDialIcon";
 import SpeedDialAction from "@mui/material/SpeedDialAction";
 import EpisodeModal from "../../component/episodes/episodeModal";
 import { useRouter } from "next/router";
+
+
 import { MEDIA_URL_INSTANCE } from "../../app-config/index.";
 import { Loader } from "../../component/loader"; 
 
@@ -25,7 +27,7 @@ export async function getStaticPaths() {
   // Call an external API endpoint to get posts
   const res = await fetch(API_INSTANCE + '/get-shows')
   const shows = await res.json()
-
+  
   // Get the paths we want to pre-render based on posts
   const paths = shows.map((show) => ({
     params: { id: show.Title },
@@ -47,11 +49,9 @@ export async function getStaticProps({ params }) {
 }
 
 const EpisodesPage = ({show}) => {
-  
-  const { DisplayShowsDetails,showsDetails,singleShowData,setSingleShowData,showJson, setShowDetails,showJsonData,setShowJsonData } = useContext(AppContext);
+  const { setShowJson,setSingleShowData,singleShowData } = useContext(AppContext);
   
   const [episodes,setEpisodes] = useState([]);
-  const [createEpisodeResponse,setCreateEpisodeResponse] = useState({})
   const router  = useRouter()
 
   //thumbnail and video file state
@@ -59,57 +59,31 @@ const EpisodesPage = ({show}) => {
   const [videoFiles,setVideoFiles] = useState([{name:''}])
 
   const showTitleQuery = router.query.id
-  
 
   //loader state
   const [loading,setLoading] = useState(false);
 
   const fetchShow = async()=>{
-  
+    
     setLoading(true)
-    // const getShowEndpoint = `${API_INSTANCE}/get-show/${showTitleQuery}`
+    const res = await axios.get(`${API_INSTANCE}/get-show/${showTitleQuery}`)
+    const show = res.data
+    console.log({SHOW : show})
 
-    // const response = await axios.get(getShowEndpoint);
-    // const showData = response.data.showItem.Item
-    // console.log({showData})
     setSingleShowData(show.showItem.Item)
-    
-    const episodesResponse = await axios.get(show.showItem.Item.showsMetaData)
-    showJson.current = episodesResponse.data;
-    console.log('results:',episodesResponse.data);
-    // //setEpisodes(showJson.current.episodes)
-    setEpisodes(episodesResponse.data.episodes)
-
+    setShowJson(show.showJson)
+    setEpisodes(show.showJson.episodes)
     setLoading(false)
-  };
-
-  const fetchEpisodes = async ()=>{
-
-    setLoading(true)
-    const episodesResponse = await axios.get(singleShowData.showsMetaData);
-    
-    console.log({showJson})
-    //console.log('DATA:',showData)
-    
-    setLoading(false)
-  }
-  
+  };  
   const [sync,setSync] = useState(false);
 
-  console.log({episodes})
+  
 
   useEffect(()=>{
-    console.log('fetching a show')
+    console.log('fetching a show data ...')
     fetchShow()
-    
   },[sync]);
 
-  // useEffect(()=>{
-
-  //   console.log('fethingEpisodes...')  
-  //   fetchEpisodes()
-  //   fetchEpisodes()
-  // },[sync])
   
   const [searchTerm, setSearchTerm] = useState("");
   
@@ -183,7 +157,7 @@ const EpisodesPage = ({show}) => {
                 color="#f3f3f3"
                 variant="p"
                 fontSize={14}
-                textTransform={"uppercase"}
+                texttransform={"uppercase"}
               >
                 Description :
               </Typography>
@@ -196,7 +170,7 @@ const EpisodesPage = ({show}) => {
                 color="#f3f3f3"
                 variant="p"
                 fontSize={14}
-                textTransform={"uppercase"}
+                texttransform={"uppercase"}
               >
                 Last-updated :
               </Typography>
@@ -209,7 +183,7 @@ const EpisodesPage = ({show}) => {
                 color="#f3f3f3"
                 variant="p"
                 fontSize={14}
-                textTransform={"uppercase"}
+                texttransform={"uppercase"}
               >
                 Visibility :
               </Typography>
@@ -234,7 +208,7 @@ const EpisodesPage = ({show}) => {
                 color="#f3f3f3"
                 variant="p"
                 fontSize={14}
-                textTransform={"uppercase"}
+                texttransform={"uppercase"}
               ></Typography>
               <Typography color="#999" variant="p" fontSize={14} marginLeft={1}>
                 {/* {showsDetails.visibility} */}
@@ -283,7 +257,7 @@ const EpisodesPage = ({show}) => {
                         return val;
                       }
                       if (
-                        val.title
+                        val.Title
                           .toLowerCase()
                           .includes(searchTerm.toLowerCase())
                       ) {
@@ -303,6 +277,11 @@ const EpisodesPage = ({show}) => {
                         description={episode.description}
                         img={MEDIA_URL_INSTANCE+`${showTitleQuery}/episodes/${episode.Title}/large-${episode.thumbnailFilename}`}
                         video = {MEDIA_URL_INSTANCE+`${showTitleQuery}/episodes/${episode.Title}/${episode.videoFileName}`}
+                        episodes = {episodes}
+                        files = {files}
+                        setFiles = {setFiles}
+                        videoFiles = {videoFiles}
+                        setVideoFiles = {setVideoFiles}
                       />
                     )})}
                   {provided.placeholder}

@@ -3,12 +3,12 @@ import { useDropzone } from "react-dropzone";
 
 const thumbsContainer = {
   display: "flex",
-  flexDirection: "column",
   flexWrap: "wrap",
   marginTop: 5,
   width: "100%",
   height: "100%",
   background: "#222",
+  justifyContent:'center'
 };
 
 const thumb = {
@@ -17,12 +17,15 @@ const thumb = {
   width: "100%",
   height: "100%",
   boxSizing: "border-box",
+  display:'flex',
+  justifyContent:'center'
+
 };
 
 const thumbInner = {
   display: "flex",
   minWidth: 0,
-  width: "100%",
+  width: "50%",
   height: "100%",
   // overflow: 'auto',
 };
@@ -93,19 +96,19 @@ const CreateEpisodeCoverArt = (props)=> {
             handleCheck;
           }}
         />
-        <p style={{ fontSize: "12px", textTransform: "uppercase" }}>
+        <p style={{ fontSize: "12px", texttransform: "uppercase" }}>
           Drag 'n' drop the show cover image
         </p>
         <p
           style={{
             fontSize: "10px",
-            textTransform: "uppercase",
+            texttransform: "uppercase",
             margin: "10px 0 5px 0",
           }}
         >
           Accepted files TYPES : jpeg/jpg{" "}
         </p>
-        <div style={{ height: "200px", width: "100%", padding: "0 0 10px 0" }}>
+        <div style={{ height: "200px", width: "100%",background:'blue',display:'flex',justifyContent:'center',alignItems:'center', padding: "0 0 10px 0" }}>
           <aside style={thumbsContainer}>{thumbs}</aside>
         </div>
       </div>

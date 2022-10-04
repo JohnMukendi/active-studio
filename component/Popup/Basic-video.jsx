@@ -103,8 +103,8 @@ const handleCheck = (e)=>{
       style={{display:'flex',flexDirection:'column'}}
       >
         <input {...getInputProps()} onChange={()=>{handleCheck}}/>
-        <p style={{fontSize:"12px",textTransform:"uppercase"}}>Drag 'n' drop the show cover image</p>
-        <p style={{fontSize:"10px",textTransform:"uppercase",margin:"10px 0 5px 0"}}>Accepted files TYPES : video/mp4 </p>
+        <p style={{fontSize:"12px",texttransform:"uppercase"}}>Drag 'n' drop the show cover image</p>
+        <p style={{fontSize:"10px",texttransform:"uppercase",margin:"10px 0 5px 0"}}>Accepted files TYPES : video/mp4 </p>
         <div style={{height:"200px",width:"100%",padding:"0 0 10px 0"}}>
         <aside style={thumbsContainer}>
          <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-cloud-arrow-up-fill" viewBox="0 0 16 16" style={{color:"lightgrey"}}>
