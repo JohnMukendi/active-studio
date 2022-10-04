@@ -31,7 +31,7 @@ const style = {
   p: 2,
 };
 
-export default function EpisodeModal({
+export default function editEpisodeModal({
   open,
   setOpen,
   sync,
@@ -190,7 +190,7 @@ export default function EpisodeModal({
       >
         <Fade in={open}>
           <Box sx={style}>
-            <Box sx={{ margin: "0 10px" }}>
+            <Box sx={{ margin: "0 10px",display:'flex',flexDirection:'column',alignItems:'center' }}>
               <ModalLoader
                 loadingOnModal={loading}
                 action="uploading"
@@ -200,28 +200,32 @@ export default function EpisodeModal({
                 id="transition-modal-title"
                 variant="h6"
                 component="h4"
+                sx={{textAlign:'center'}}
               >
-                CREATE EPISODES
+                EDIT EPISODE
               </Typography>
-              <hr style={{ width: "100px", margin: "10px 0" }} />
-            </Box>
-            <Typography variant="p" sx={{ fontSize: "11px", margin: "0 10px" }}>
+              <hr style={{ width: "100px", margin: "10px 0",textAlign:'center' }} />
+            <Typography variant="p" sx={{ fontSize: "11px", margin: "0 10px",textAlign:'center' }}>
               <b>NOTE :</b> ONLY EPISODES WITH VIDEOS UNDERNEATH THEM ARE
               VISIBLE TO THE PUBLIC
             </Typography>
+            </Box>
 
-            <Box sx={{ display: "flex", overFlow: "scroll" }}>
-              <Box style={{ height: "100%", width: "50%", padding: "10px" }}>
+            <Box sx={{ overFlow: "scroll",height:'50vh' }}>
+              <Box style={{ height: "100%",padding: "10px" }}>
                 <CreateEpisodeCoverArt
                   files={files}
                   handleSetFiles={handleSetFiles}
                   img={"logo.svg"}
                 />
+                <Box sx={{background:'red',width:'100%'}}>
                 <BasicVideo
                   videoFiles={videoFiles}
                   handleSetVideoFiles={handleSetVideoFiles}
                   img={"logo.svg"}
                 ></BasicVideo>
+                </Box>
+                
               </Box>
               <Box></Box>
               <Box
@@ -233,7 +237,7 @@ export default function EpisodeModal({
                 }}
               >
                 <form onSubmit={handleSubmit}>
-                  <input
+                  {/* <input
                     style={{
                       height: "50px",
                       width: "100%",
@@ -246,7 +250,7 @@ export default function EpisodeModal({
                     }}
                     placeholder="EPISODE NAME"
                     onChange={(e) => SetName(e.target.value)}
-                  />
+                  /> */}
                   {/* <p style={{margin:"0px 10px",fontSize:"14px"}}>{'SHOW NAME'}</p>  */}
 
                   <textarea
@@ -268,7 +272,7 @@ export default function EpisodeModal({
                   >
                     {/* <p style={{margin:"0px 10px",fontSize:"14px"}}>{'SHOW DESCRIPTION'}</p>  */}
                   </textarea>
-                  <input
+                  {/* <input
                     type="number"
                     min={1}
                     placeHolder="SEASON NUMBER"
@@ -286,7 +290,7 @@ export default function EpisodeModal({
                       padding: "10px",
                       color: "white",
                     }}
-                  />
+                  /> */}
                   <input
                     type="text"
                     placeHolder="Author"

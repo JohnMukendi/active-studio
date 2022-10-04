@@ -98,8 +98,8 @@ function Previews(props) {
     <section className="container" style={container}>
       <div {...getRootProps({className: 'dropzone'})}>
         <input {...getInputProps()}/>
-        <p style={{fontSize:"12px",textTransform:"uppercase"}}>Drag 'n' drop the show cover image</p>
-       <p style={{fontSize:"10px",textTransform:"uppercase",margin:"10px 0 5px 0"}}>Accepted files TYPES : jpeg/jpg </p>
+        <p style={{fontSize:"12px",texttransform:"uppercase"}}>Drag 'n' drop the show cover image</p>
+       <p style={{fontSize:"10px",texttransform:"uppercase",margin:"10px 0 5px 0"}}>Accepted files TYPES : jpeg/jpg </p>
         <div style={{height:"200px",width:"100%",padding:"0 0 10px 0"}}>
         <aside style={thumbsContainer}>
         {thumbs}

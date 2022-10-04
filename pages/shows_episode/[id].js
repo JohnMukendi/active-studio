@@ -18,15 +18,40 @@ import SpeedDialIcon from "@mui/material/SpeedDialIcon";
 import SpeedDialAction from "@mui/material/SpeedDialAction";
 import EpisodeModal from "../../component/episodes/episodeModal";
 import { useRouter } from "next/router";
+
+
 import { MEDIA_URL_INSTANCE } from "../../app-config/index.";
 import { Loader } from "../../component/loader"; 
 
-const EpisodesPage = () => {
+export async function getStaticPaths() {
+  // Call an external API endpoint to get posts
+  const res = await fetch(API_INSTANCE + '/get-shows')
+  const shows = await res.json()
   
-  const { DisplayShowsDetails,showsDetails,singleShowData,setSingleShowData,showJson, setShowDetails,showJsonData,setShowJsonData } = useContext(AppContext);
+  // Get the paths we want to pre-render based on posts
+  const paths = shows.map((show) => ({
+    params: { id: show.Title },
+  }))
+
+  // We'll pre-render only these paths at build time.
+  // { fallback: false } means other routes should 404.
+  return { paths, fallback: false }
+}
+
+export async function getStaticProps({ params }) {
+  // params contains the post `id`.
+  // If the route is like /posts/1, then params.id is 1
+  const res = await fetch(`${API_INSTANCE}/get-show/${params.id}`)
+  const show = await res.json()
+
+  // Pass post data to the page via props
+  return { props: { show } }
+}
+
+const EpisodesPage = ({show}) => {
+  const { setShowJson,setSingleShowData,singleShowData } = useContext(AppContext);
   
   const [episodes,setEpisodes] = useState([]);
-  const [createEpisodeResponse,setCreateEpisodeResponse] = useState({})
   const router  = useRouter()
 
   //thumbnail and video file state
@@ -34,44 +59,30 @@ const EpisodesPage = () => {
   const [videoFiles,setVideoFiles] = useState([{name:''}])
 
   const showTitleQuery = router.query.id
-  console.log({showTitleQuery})
 
   //loader state
   const [loading,setLoading] = useState(false);
 
-  const fetchEpisodes = async()=>{
-  
+  const fetchShow = async()=>{
+    
     setLoading(true)
-    const getShowEndpoint = `${API_INSTANCE}/get-show/${showTitleQuery}`
+    const res = await axios.get(`${API_INSTANCE}/get-show/${showTitleQuery}`)
+    const show = res.data
+    console.log({SHOW : show})
 
-    const response = await axios.get(getShowEndpoint);
-    const showData = response.data.showItem.Item
-    console.log({showData})
-    setSingleShowData(showData)
-
-    console.log('YEAAAAAH:',singleShowData);
-    const episodesResponse = await axios.get(showData.showsMetaData);
-    
-    showJson.current = episodesResponse.data;
-    console.log('results:',episodesResponse.data);
-
-    setEpisodes(showJson.current.episodes)
-    console.log({showJson})
-    console.log('DATA:',showData)
-    
+    setSingleShowData(show.showItem.Item)
+    setShowJson(show.showJson)
+    setEpisodes(show.showJson.episodes)
     setLoading(false)
-  }
+  };  
   const [sync,setSync] = useState(false);
 
-  console.log({episodes})
+  
 
   useEffect(()=>{
-  
-    console.log('fethingEpisodes...')
-    
-    fetchEpisodes()
-    
-  },[sync])
+    console.log('fetching a show data ...')
+    fetchShow()
+  },[sync]);
 
   
   const [searchTerm, setSearchTerm] = useState("");
@@ -86,7 +97,7 @@ const EpisodesPage = () => {
 
   
 
-  console.log('AAAAH:',showJsonData)
+  
   return (
     <Box sx={{ color: "#fff", background: "red" }}>
          <SpeedDial
@@ -146,7 +157,7 @@ const EpisodesPage = () => {
                 color="#f3f3f3"
                 variant="p"
                 fontSize={14}
-                textTransform={"uppercase"}
+                texttransform={"uppercase"}
               >
                 Description :
               </Typography>
@@ -159,7 +170,7 @@ const EpisodesPage = () => {
                 color="#f3f3f3"
                 variant="p"
                 fontSize={14}
-                textTransform={"uppercase"}
+                texttransform={"uppercase"}
               >
                 Last-updated :
               </Typography>
@@ -172,7 +183,7 @@ const EpisodesPage = () => {
                 color="#f3f3f3"
                 variant="p"
                 fontSize={14}
-                textTransform={"uppercase"}
+                texttransform={"uppercase"}
               >
                 Visibility :
               </Typography>
@@ -197,7 +208,7 @@ const EpisodesPage = () => {
                 color="#f3f3f3"
                 variant="p"
                 fontSize={14}
-                textTransform={"uppercase"}
+                texttransform={"uppercase"}
               ></Typography>
               <Typography color="#999" variant="p" fontSize={14} marginLeft={1}>
                 {/* {showsDetails.visibility} */}
@@ -246,7 +257,7 @@ const EpisodesPage = () => {
                         return val;
                       }
                       if (
-                        val.title
+                        val.Title
                           .toLowerCase()
                           .includes(searchTerm.toLowerCase())
                       ) {
@@ -266,6 +277,11 @@ const EpisodesPage = () => {
                         description={episode.description}
                         img={MEDIA_URL_INSTANCE+`${showTitleQuery}/episodes/${episode.Title}/large-${episode.thumbnailFilename}`}
                         video = {MEDIA_URL_INSTANCE+`${showTitleQuery}/episodes/${episode.Title}/${episode.videoFileName}`}
+                        episodes = {episodes}
+                        files = {files}
+                        setFiles = {setFiles}
+                        videoFiles = {videoFiles}
+                        setVideoFiles = {setVideoFiles}
                       />
                     )})}
                   {provided.placeholder}
