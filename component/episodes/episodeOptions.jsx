@@ -36,6 +36,7 @@ export default function EpisodeOptions({
   sync,
   index,
   episodes,
+  episode,
   files,
   setFiles, 
   videoFiles, 
@@ -43,6 +44,7 @@ export default function EpisodeOptions({
 }) {
   const { singleShowData, showJson, setShowJson } =
     React.useContext(AppContext);
+    console.log({episode})
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const [openModal, setOpenModal] = React.useState(false);
@@ -65,9 +67,9 @@ export default function EpisodeOptions({
   };
 
   //EDIT FUNCTION
-  const [openEPModal, setOpenEPMOdal] = React.useState(false);
+  const [openEPModal, setOpenEPModal] = React.useState(false);
   const openEpisodeModal = () => {
-    setOpenEPMOdal(true);
+    setOpenEPModal(true);
   };
   //DELETE FUNCTION
   const handleDeleteClick = async () => {
@@ -172,11 +174,16 @@ export default function EpisodeOptions({
       {/* DELETE CONFIRMATION PROMPT */}
       <EditEpisodeModal 
         open = {openEPModal}
+        setOpen = {setOpenEPModal}
         files = {files}
          setFiles = {setFiles}
          videoFiles = {videoFiles}
-         setVideoFiles = {setVideoFiles} 
-      
+         setVideoFiles = {setVideoFiles}
+         episode = {episode} 
+          episodes = {episodes}
+          sync = {sync}
+          setSync = {setSync}
+          index = {index}
       />
       <Modal
         aria-labelledby="transition-modal-title"
