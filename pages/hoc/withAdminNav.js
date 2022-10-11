@@ -94,7 +94,7 @@ const withAdminNav = (Component) => {
                   }}
                 >
                   <img
-                    src="https://cdn.watchcorridor.com/assets/logo_short.svg"
+                    src="https://www.activetvonline.co.za/static/media/logo.718a6dab.png"
                     alt=""
                     style={{
                       height: "100%",
@@ -124,8 +124,8 @@ const withAdminNav = (Component) => {
             <List>
               {tabs.map((tab) => {
                 return (
-                  <Link href={tab.route}>
-                    <ListItem button key={tab.title}>
+                  <Link href={tab.route} key={tab.title}>
+                    <ListItem button >
                       <ListItemIcon> {tab.icon} </ListItemIcon>
                       <ListItemText primary={tab.title} />
                     </ListItem>
