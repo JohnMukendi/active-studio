@@ -142,13 +142,15 @@ export default function editEpisodeModal({
         console.log({THE_DATA:JSON.parse(jsonDataConfig.data)})
         await axios(jsonDataConfig);
 
-        //posting the thumbnail
+        if (files[0]){
+          //posting the thumbnail
         const { largeCoverArt } = response.data;
 
         console.log("posting thumbnail....");
         await axios.put(largeCoverArt, files[0], {
           "Content-Type": "image/jpeg",
         });
+        }
 
         //posting the video file
 //        const { episodeVideoSignedUrl } = response.data;
