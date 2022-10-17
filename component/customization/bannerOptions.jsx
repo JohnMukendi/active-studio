@@ -1,18 +1,19 @@
 import * as React from "react";
 
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz'
-import axios from 'axios'
-import DeleteIcon from '@mui/icons-material/Delete';
-import Modal from '@mui/material/Modal'
-import { Backdrop, Box, Typography,Button,Fade } from '@mui/material';
-import { ModalLoader } from '../loader';
-import { API_INSTANCE } from '../../app-config/index.';
+import Menu from "@mui/material/Menu";
+import Button from "@mui/material/Button";
+import MenuItem from "@mui/material/MenuItem";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import axios from "axios";
+import DeleteIcon from "@mui/icons-material/Delete";
+import Modal from "@mui/material/Modal";
 import ShareIcon from "@mui/icons-material/Share";
+
+import { Backdrop, Box, Typography, Fade } from "@mui/material";
+import { ModalLoader } from "../loader";
 import { Edit } from "@mui/icons-material";
-import ShareComponent from "./ShareComponent";
-import EditShowModal from "./EditShow";
+import ShareComponent from "../shows-utils/ShareComponent";
+import EditShowModal from "../shows-utils/EditShow";
 
 const modalStyle = {
   position: "absolute",
@@ -31,7 +32,7 @@ const modalStyle = {
   p: 2,
 };
 
-export default function ShowOptions({
+export default function BannerOptions({
   show,
   title,
   img,
@@ -51,7 +52,6 @@ export default function ShowOptions({
     setShareLink(newLink)
     console.log(shareLink)
   }
-  console.log(show)
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -74,35 +74,31 @@ export default function ShowOptions({
     setLoadingOnModal(true);
     const showTitle = title.replace(/ /g, "-");
     //const deleteEndpoint = `http://127.0.0.1:3000/delete-show/${showTitle}`
-  
-    const deleteEndpoint = `${API_INSTANCE}/delete-show/${showTitle}`;
-    //const deleteEndpoint = `https://nahgp463k7.execute-api.us-east-2.amazonaws.com/Prod/delete-show/${showTitle}`
-    
-    console.log('endpoint :',deleteEndpoint)
-  
-    try{
-      console.log(title)
-      
-      console.log('deleting...')
-      const response = await axios.delete(deleteEndpoint)
-      console.log(deleteEndpoint)
-        //,{header:{'Content-Type' : 'application/json'}});
-      console.log('RESPONSE:',response)
+
+    //const deleteEndpoint = `${API_INSTANCE}/delete-show/${showTitle}`;
+    const deleteEndpoint = `https://nahgp463k7.execute-api.us-east-2.amazonaws.com/Prod/delete-show/${showTitle}`;
+
+    console.log("endpoint :", deleteEndpoint);
+
+    try {
+      console.log(title);
+
+      console.log("deleting...");
+      const response = await axios.delete(deleteEndpoint);
+      console.log(deleteEndpoint);
+      //,{header:{'Content-Type' : 'application/json'}});
+      console.log("RESPONSE:", response);
       setAnchorEl(null);
       setFetchAgain(!fetchAgain);
       setOpenModal(false);
     } catch (error) {
       console.log("endpoint :", deleteEndpoint);
 
-    
+      console.log("DELETE ERROR:", error);
       
-      
-      
-      console.log('DELETE ERROR:',error)
-      setLoadingOnModal(false)  
-    
+    }
     setLoadingOnModal(false);
-  }};
+  };
 
   return (
     <div>
@@ -144,18 +140,7 @@ export default function ShowOptions({
             </Button>
           </div>
         </MenuItem>
-        <MenuItem
-          // onClick={handleDelete}
-          sx={{ display: "flex", alignItems: "center" }}
-        >
-          <div style={{ width:'100%' }}>
-            {/* <Button>
-              <Edit sx={{ marginRight: "4px" }} />
-              Edit
-            </Button> */}
-            <EditShowModal show={show}  openModal={openEditModal} setOpenModal={setOpenEditModal}/>
-          </div> 
-        </MenuItem>
+       
       </Menu>
 
       {/* DELETE CONFIRMATION PROMPT */}
