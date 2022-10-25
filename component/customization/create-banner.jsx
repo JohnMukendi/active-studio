@@ -18,6 +18,7 @@ import ShareIcon from "@mui/icons-material/Share";
 import CreateShow from "../create-show/create-show";
 import axios from "axios";
 import { API_INSTANCE } from "../../app-config/index.";
+import { ModalLoader } from "../loader";
 export default function CreateBanner() {
   const [files, setFiles] = React.useState([]);
   const [openModal, setOpenModal] = React.useState(false);
@@ -27,10 +28,17 @@ export default function CreateBanner() {
   const handleOpen = () => setOpenModal(true);
   const handleClose = () => setOpenModal(false);
   console.log(files)
+  const [loading,setLoading] = React.useState(false)
+  const [numOfBannerImages,SetNumOfBannerImages] = React.useState(0)
   const handleCreate = async () => {
+    if (files.length === 0){
+      alert('please select an image')
+      return
+    }
     const endpoint = API_INSTANCE + `/post-config/${files[0].name}`;
 
     try {
+      setLoading(true)
       console.log("uploading banner...");
       const response = await axios.post(endpoint);
       console.log("recieved response");
@@ -42,7 +50,9 @@ export default function CreateBanner() {
       });
       
       console.log('success')
+      setLoading(false)
     } catch (err) {
+      setLoading(false)
       console.log('THEWRE WAS AN ERROR UPLOADING THE BANNER',err)
     }
   };
@@ -55,7 +65,7 @@ export default function CreateBanner() {
         sx={{ position: "absolute", bottom: 21, right: 21 }}
         icon={<SpeedDialIcon />}
       ></SpeedDial>
-
+      
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
@@ -85,7 +95,8 @@ export default function CreateBanner() {
             justifyContent: "center",
             alignItems: "center",
           }}
-        >
+        > 
+          <ModalLoader loadingOnModal={loading} action = 'Uploading Banner Image' height = '100%' />
           <Grid container>
             <Grid
               item
@@ -168,7 +179,7 @@ export default function CreateBanner() {
                   }}
                   // value={name}
                   placeholder="Number of Banners Displayed"
-                  // onChange={(e) => SetName(e.target.value)}
+                  onChange={(e) => SetNumOfBannerImages(e.target.value)}
                 />
               </Stack>
               <Box

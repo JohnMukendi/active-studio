@@ -68,10 +68,8 @@ export const CategoriesSort = () => {
       setMultiSelected("Featured Shows");
     }
 
-    await setTimeout(() => {
-      console.log('done')
-    }, 15000)
-    //setLoading(false)
+    
+    setLoading(false)
   };
 
   return (

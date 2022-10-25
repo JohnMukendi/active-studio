@@ -80,7 +80,7 @@ export default function CreateShowModal({
 
   // receive input values from show name and show description
   const [extraInfo, setExtraInfo] = useState({
-    seasons: 0,
+    author : '',
     tags: [],
     visibility: "public",
   });
@@ -549,13 +549,13 @@ export default function CreateShowModal({
                               onChange={(e) => {
                                 setExtraInfo({
                                   ...extraInfo,
-                                  seasons: e.target.value,
+                                  author: e.target.value,
                                 });
                               }}
-                              placeholder="Seasons"
-                              name="seasons"
-                              type="number"
-                              value={extraInfo.seasons}
+                              placeholder="Author"
+                              name="Author"
+                              type="text"
+                              
                               style={{
                                 height: "45px",
                                 width: "100%",
@@ -607,7 +607,7 @@ export default function CreateShowModal({
                                 background: "#222",
                                 display: "flex",
                                 alignItems: "center",
-                                padding: "8px",
+                                padding: "0px 8px",
                                 overflowX: "scroll",
                               }}
                             >
