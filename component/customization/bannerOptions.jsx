@@ -8,12 +8,14 @@ import axios from "axios";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Modal from "@mui/material/Modal";
 import ShareIcon from "@mui/icons-material/Share";
+import { AppConfigContext } from "../context/AppConfigContext";
 
 import { Backdrop, Box, Typography, Fade } from "@mui/material";
 import { ModalLoader } from "../loader";
 import { Edit } from "@mui/icons-material";
 import ShareComponent from "../shows-utils/ShareComponent";
 import EditShowModal from "../shows-utils/EditShow";
+import { API_INSTANCE } from "../../app-config/index.";
 
 const modalStyle = {
   position: "absolute",

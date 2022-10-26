@@ -114,7 +114,6 @@ export default function ShowOptions({
         onClick={handleClick}
         cursor="pointer"
       />
-
       <Menu
         id="basic-menu"
         anchorEl={anchorEl}

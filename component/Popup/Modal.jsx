@@ -19,7 +19,6 @@ import { useState, useEffect, useContext } from "react";
 const axios = require("axios");
 // import imageCompression from 'browser-image-compression';
 import { AppContext } from "../context/AppContext";
-
 import { SeamlessIframe } from "seamless-iframe";
 import sanitize from "sanitize-html";
 import { API_INSTANCE } from "../../app-config/index.";
@@ -135,6 +134,8 @@ export default function CreateShowModal({
     url: "",
   });
 
+  
+
   const handleFieldChange = (e) => {
     setIframeUploader({
       ...iframeUploader,
@@ -142,6 +143,8 @@ export default function CreateShowModal({
     });
     console.log(iframeUploader);
   };
+
+  
 
   useEffect(() => {
     setIframeUploader({
@@ -222,6 +225,12 @@ export default function CreateShowModal({
         visibility: extraInfo.visibility,
 
         
+        episodes: [],
+        description: description,
+        timestamp: new Date(),
+        seasons:extraInfo.seasons,
+        visibility:extraInfo.visibility,
+        tags:extraInfo.tags
       });
 
       //shows meta data that will be posted to s3 and retrived on a 'getsingleshow call

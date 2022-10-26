@@ -7,19 +7,33 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import ShowOptions from "../shows-utils/showOptions";
 import BannerOptions from "./bannerOptions";
 import CreateBanner from "./create-banner";
-
+import axios from 'axios'
+import { API_INSTANCE } from "../../app-config/index.";
+import { AppContext } from "../context/AppContext";
 const UploadBanners = () => {
 
+  const {bannerSync,setBannerSync} = React.useContext(AppContext)
   const [loadingOnModal,setLoadingOnModal] = React.useState(false)
-  const ImagesArr = [
-    "https://images.pexels.com/photos/2698473/pexels-photo-2698473.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-    "https://images.pexels.com/photos/3039036/pexels-photo-3039036.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-    "https://images.pexels.com/photos/2559749/pexels-photo-2559749.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-    "https://images.pexels.com/photos/1604849/pexels-photo-1604849.jpeg?auto=compress&cs=tinysrgb&w=1600",
-    "https://images.pexels.com/photos/1652555/pexels-photo-1652555.jpeg?auto=compress&cs=tinysrgb&w=1600",
-    "https://images.pexels.com/photos/767276/pexels-photo-767276.jpeg?auto=compress&cs=tinysrgb&w=1600",
+  const [ImagesArr,setImagesArr] = React.useState([])
+  const [sync,setSync] = React.useState(false)
+  // const ImagesArr = [
+  //   "https://images.pexels.com/photos/2698473/pexels-photo-2698473.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+  //   "https://images.pexels.com/photos/3039036/pexels-photo-3039036.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+  //   "https://images.pexels.com/photos/2559749/pexels-photo-2559749.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+  //   "https://images.pexels.com/photos/1604849/pexels-photo-1604849.jpeg?auto=compress&cs=tinysrgb&w=1600",
+  //   "https://images.pexels.com/photos/1652555/pexels-photo-1652555.jpeg?auto=compress&cs=tinysrgb&w=1600",
+  //   "https://images.pexels.com/photos/767276/pexels-photo-767276.jpeg?auto=compress&cs=tinysrgb&w=1600",
 
-  ];
+  // ];
+
+  React.useEffect(()=>{
+    async function getImages(){
+      
+      const response = await axios.get(API_INSTANCE + '/get-config')
+      setImagesArr(response.data.BannerImageUrls)
+    }
+    getImages()
+  },[bannerSync])
 
   return (
     <Box

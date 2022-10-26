@@ -19,7 +19,10 @@ import CreateShow from "../create-show/create-show";
 import axios from "axios";
 import { API_INSTANCE } from "../../app-config/index.";
 import { ModalLoader } from "../loader";
+import { AppContext } from "../context/AppContext";
+
 export default function CreateBanner() {
+  const { bannerSync, setBannerSync } = React.useContext(AppContext);
   const [files, setFiles] = React.useState([]);
   const [openModal, setOpenModal] = React.useState(false);
   const handleSetFiles = (file) => {
@@ -27,33 +30,36 @@ export default function CreateBanner() {
   };
   const handleOpen = () => setOpenModal(true);
   const handleClose = () => setOpenModal(false);
-  console.log(files)
-  const [loading,setLoading] = React.useState(false)
-  const [numOfBannerImages,SetNumOfBannerImages] = React.useState(0)
+  console.log(files);
+  const [loading, setLoading] = React.useState(false);
+  const [numOfBannerImages, SetNumOfBannerImages] = React.useState(0);
   const handleCreate = async () => {
-    if (files.length === 0){
-      alert('please select an image')
-      return
+    if (files.length === 0) {
+      alert("please select an image");
+      return;
     }
     const endpoint = API_INSTANCE + `/post-config/${files[0].name}`;
 
     try {
-      setLoading(true)
+      setLoading(true);
       console.log("uploading banner...");
       const response = await axios.post(endpoint);
       console.log("recieved response");
       const { configJson, bannerImageSignedUrl } = response.data;
-      
+
       console.log({ configJson, bannerImageSignedUrl });
-      await axios.put(bannerImageSignedUrl,files[0],{
-        'Content-Type' : 'image/jpeg'
+      await axios.put(bannerImageSignedUrl, files[0], {
+        "Content-Type": "image/jpeg",
       });
-      
-      console.log('success')
-      setLoading(false)
+
+      console.log("success");
+      setLoading(false);
+      setOpenModal(false);
+      setBannerSync(!bannerSync)
     } catch (err) {
-      setLoading(false)
-      console.log('THEWRE WAS AN ERROR UPLOADING THE BANNER',err)
+      setLoading(false);
+      setOpenModal(false);
+      console.log("THEWRE WAS AN ERROR UPLOADING THE BANNER", err);
     }
   };
 
@@ -65,7 +71,7 @@ export default function CreateBanner() {
         sx={{ position: "absolute", bottom: 21, right: 21 }}
         icon={<SpeedDialIcon />}
       ></SpeedDial>
-      
+
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
@@ -95,8 +101,12 @@ export default function CreateBanner() {
             justifyContent: "center",
             alignItems: "center",
           }}
-        > 
-          <ModalLoader loadingOnModal={loading} action = 'Uploading Banner Image' height = '100%' />
+        >
+          <ModalLoader
+            loadingOnModal={loading}
+            action="Uploading Banner Image"
+            height="100%"
+          />
           <Grid container>
             <Grid
               item
