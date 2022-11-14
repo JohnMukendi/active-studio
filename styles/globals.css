@@ -42,3 +42,19 @@ a {
 input{
   outline: none;
 }
+
+.active-tv-font {
+  font-family: "ArcadeFont", cursive !important;
+}
+
+.link{
+  color:'yellow'
+ }
+
+ .analytics{
+  height:'100vh'
+ }
+
+ .crd{
+  padding: 20px 50px;
+ }
